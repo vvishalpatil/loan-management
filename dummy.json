@@ -1,0 +1,18 @@
+{
+    "firstname" : "Vivek",
+    "lastname" : "Thakare",
+    "designation" : "Associate Software Engg.",
+    "email" : "Vivek@gmail.com",
+    "gender" : "Male",
+    "username" : "Vivek@Xor",
+    "loantype" : "House Loan",
+    "loan" : {
+        "paid" : 5000,
+        "remaining" : 10000
+    },
+    "tenure" : {
+        "completed" : 2,
+        "pending" : 2
+    } 
+    
+}
