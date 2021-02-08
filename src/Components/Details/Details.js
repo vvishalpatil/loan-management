@@ -58,19 +58,16 @@ const Details = (props) => {
                       <th scope="row">1</th>
                       <td>Rs. 5000</td>
                       <td>3/4/2020</td>
-
                     </tr>
                     <tr>
                       <th scope="row">2</th>
                       <td>Rs. 1300</td>
                       <td>2/6/2020</td>
-
                     </tr>
                     <tr>
                       <th scope="row">3</th>
                       <td>Rs. 4000</td>
                       <td>12/9/2020</td>
-
                     </tr>
                   </tbody>
                 </table>
@@ -79,7 +76,6 @@ const Details = (props) => {
           </div>
           <div className="col-sm">
             <div className="card shadow-sm">
-
               <div className="card-body">
                 <div className="card-header h6 rounded text-white"
                   style={{ backgroundColor: "#76b900" }}>
@@ -88,19 +84,14 @@ const Details = (props) => {
                 <hr></hr>
                 <p class="card-text my-2">Amount : Rs. 4000 </p>
                 <p className="card-text">Due Date: 3/03/2021 </p>
-
                 <button class="btn btn-primary mt-1">Pay Now</button>
               </div>
             </div>
-
             <div className="container mt-4">
               <button class="btn btn-outline-success btn-block ">Close Loan</button>
             </div>
-
           </div>
-
         </div>
-
       </div>
     </div>
   );

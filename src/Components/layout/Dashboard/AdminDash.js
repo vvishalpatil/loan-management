@@ -38,13 +38,6 @@ const AdminDash = () => {
         )
     }
 
-    const calculateTotalLoan = () => {
-        const {users}  = userList;
-        const totalRemaining = 0 ;
-        const totalPaid = 0;
-    } 
-
-
     if(status){
         console.log(userList.users);
         const {users} = userList;
