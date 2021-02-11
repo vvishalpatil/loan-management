@@ -35,13 +35,13 @@ const Profile = () => {
                     <div className="card-body  text-justify" style={{fontSize:"16px"}}>
                         <center><img src={avatar}  height="20%" width="20%" className="rounded-circle shadow" alt="avatar"/></center>
                         <p className="card-text text-justify text-center  font-weight-normal h3 mt-3">Vivek Thakare</p>
-                        <p className="card-text text-justify  text-center h5 text-success font-weight-normal mt-2">Associate software Engg.</p>
+                        {/* <p className="card-text text-justify  text-center h5 text-success font-weight-normal mt-2">Associate software Engg.</p> */}
                         <hr  style={{borderTop: "2px solid slateblue"}} />
                         <div className="ml-3">
                             <p className="card-text"><FontAwesomeIcon icon= {faEnvelope} className="text-info mr-2"/> <b>Email</b> :- Vivek@gmail.com </p>
                             <p className="card-text"><FontAwesomeIcon icon= {faVenusMars} className="text-info mr-2"/><b>Gender</b> :- Male </p>
                             <p className="card-text"><FontAwesomeIcon icon= {faUser} className="text-info mr-2"/><b>Username</b> :- Vivek@123</p>
-                            <p className="card-text"><FontAwesomeIcon icon= {faCalendarAlt} className="text-info mr-2"/><b>Date of Joining</b> :- 02/11/2020 </p>
+                            <p className="card-text"><FontAwesomeIcon icon= {faCalendarAlt} className="text-info mr-2"/><b>Date of Birth</b> :- 02/11/2020 </p>
                         </div>
                     </div>   
                 </div>

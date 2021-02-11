@@ -8,8 +8,9 @@ const UpdateProfile = (props) => {
     const {register, handleSubmit} = useForm();
 
     const onSubmit = async (data) => {
-        const res = await axios.post('https://demo8567258.mockable.io/userProfile',data);
-        alert(res);
+        // const res = await axios.post('https://demo8567258.mockable.io/userProfile',data);
+        // alert(res);
+        console.log(data);
     }
 
     const {firstname, lastname, designation, email, gender, doj} = props.profile;
@@ -27,7 +28,7 @@ const UpdateProfile = (props) => {
                                         <label htmlFor="firstname">Firstname :- </label>
                                         <input type="text" 
                                             className="form-control shadow-sm"  
-                                            name="firstname" 
+                                            name="first_name" 
                                             ref={register}
                                             defaultValue={firstname} 
                                             required
@@ -40,7 +41,7 @@ const UpdateProfile = (props) => {
                                         <label htmlFor="lastname">Lastname :- </label>
                                         <input type="text" 
                                             className="form-control shadow-sm "  
-                                            name="lastname" 
+                                            name="last_name" 
                                             ref={register} 
                                             defaultValue={lastname} 
                                             placeholder="Enter Lastname"
@@ -48,24 +49,40 @@ const UpdateProfile = (props) => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="form-group">
-                                <label htmlFor="designation">Designation :- </label>
-                                <input type="text"  
-                                    className="form-control shadow-sm"  
-                                    name="designation" 
-                                    ref = {register}
-                                    defaultValue={designation} 
-                                    placeholder="Enter Designation"
-                                />
+                            <div className="row mt-1">
+                                <div className="col">
+                                    <div className="form-group">
+                                        <label htmlFor="mobile">Mobile :- </label>
+                                        <input type="text"  
+                                            className="form-control shadow-sm"  
+                                            name="mobile" 
+                                            ref = {register}
+                                            defaultValue={designation} 
+                                            placeholder="Enter Mobile"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="col">
+                                    <div className="form-group">
+                                        <label htmlFor="email">Email :- </label>
+                                        <input type="email"  
+                                            className="form-control shadow-sm" 
+                                            name="email" 
+                                            ref={register}
+                                            defaultValue={email} 
+                                            placeholder="Enter Email"
+                                        />
+                                    </div>
+                                </div>
                             </div>
                             <div className="form-group">
-                                <label htmlFor="desig">Email :- </label>
-                                <input type="email"  
-                                    className="form-control shadow-sm" 
-                                    name="email" 
-                                    ref={register}
-                                    defaultValue={email} 
-                                    placeholder="Enter Email"
+                                <label htmlFor="address">Address :- </label>
+                                <input type="text"  
+                                    className="form-control shadow-sm"  
+                                    name="address" 
+                                    ref = {register}
+                                    defaultValue={''} 
+                                    placeholder="Enter Address"
                                 />
                             </div>
                             <div className="row mt-1">
@@ -81,10 +98,10 @@ const UpdateProfile = (props) => {
                                 </div>
                                 <div className="col">
                                     <div className="form-group">
-                                        <label htmlFor="doj">Date of Joining :- </label>
+                                        <label htmlFor="dob">Date of Birth :- </label>
                                         <input type="date"  
                                             className="form-control shadow-sm" 
-                                            name="doj"
+                                            name="dob"
                                             ref={register}
                                             defaultValue={doj}
                                         />
