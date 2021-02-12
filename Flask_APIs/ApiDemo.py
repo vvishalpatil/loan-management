@@ -33,9 +33,16 @@ def pay_loan(uid, amount):
     '''
     cur.execute(query1, str(uid))
     res1 = cur.fetchone()
-    new_remaining_loan = int(res1['reamaining_loan']) - amount
+    new_remaining_loan = int(res1['remaining_loan']) - amount
     print(new_remaining_loan)
     cur.execute(query2, (new_remaining_loan, uid))
+
+    query3 = '''
+    INSERT into transaction_info (user_id, note, paid_amount, new_remaining) 
+    VALUES(%s,"installment money " , %s,%s)
+            
+    '''
+    cur.execute(query3,(str(uid),str(amount),str(new_remaining_loan)))
     mysql.connection.commit()
     # code to add data in transaction table(uid, tid, timestamp , note, Paid amount , new remaining)
     return jsonify({'data': [uid, amount]})
