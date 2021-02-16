@@ -8,12 +8,15 @@ const UpdateProfile = (props) => {
     const {register, handleSubmit} = useForm();
 
     const onSubmit = async (data) => {
-        // const res = await axios.post('https://demo8567258.mockable.io/userProfile',data);
-        // alert(res);
-        console.log(data);
+        try{
+            const res = await axios.put(`/updateUserProfile/${2}`,data);
+            alert(res.data.message);
+        }catch(err){
+            alert(err);
+        }
     }
 
-    const {firstname, lastname, designation, email, gender, doj} = props.profile;
+    const {first_name, last_name, mobile, email, gender, dob, address} = props.profile;
      
     return (
         <div>
@@ -30,7 +33,7 @@ const UpdateProfile = (props) => {
                                             className="form-control shadow-sm"  
                                             name="first_name" 
                                             ref={register}
-                                            defaultValue={firstname} 
+                                            defaultValue={first_name} 
                                             required
                                             placeholder="Enter Firstname"
                                         />
@@ -43,7 +46,7 @@ const UpdateProfile = (props) => {
                                             className="form-control shadow-sm "  
                                             name="last_name" 
                                             ref={register} 
-                                            defaultValue={lastname} 
+                                            defaultValue={last_name} 
                                             placeholder="Enter Lastname"
                                         />
                                     </div>
@@ -57,7 +60,7 @@ const UpdateProfile = (props) => {
                                             className="form-control shadow-sm"  
                                             name="mobile" 
                                             ref = {register}
-                                            defaultValue={designation} 
+                                            defaultValue={mobile} 
                                             placeholder="Enter Mobile"
                                         />
                                     </div>
@@ -81,7 +84,7 @@ const UpdateProfile = (props) => {
                                     className="form-control shadow-sm"  
                                     name="address" 
                                     ref = {register}
-                                    defaultValue={''} 
+                                    defaultValue={address} 
                                     placeholder="Enter Address"
                                 />
                             </div>
@@ -103,7 +106,7 @@ const UpdateProfile = (props) => {
                                             className="form-control shadow-sm" 
                                             name="dob"
                                             ref={register}
-                                            defaultValue={doj}
+                                            defaultValue={dob}
                                         />
                                     </div>
                                 </div>
