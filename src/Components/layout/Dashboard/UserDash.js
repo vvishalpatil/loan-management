@@ -11,12 +11,12 @@ const UserDash = () => {
     const [status, setStatus] = useState(false);
 
     useEffect(() => {
-        const getDetails = async() => {
-            const res = await axios.get('https://demo8567258.mockable.io/userDetails');
-            setUserDetails(res.data);
+        const getDetails = async(id) => {
+            const res = await axios.get(`/getUserDetails/${id}`);
+            setUserDetails(res.data.data);
             setStatus(true);
         }
-        getDetails();
+        getDetails(1);
 
         return () => {
             console.log("unmount");
@@ -25,7 +25,14 @@ const UserDash = () => {
 
 
     if(status){
-        const {loan, tenure} = userDetails;
+        const loan={
+            paid:parseInt(userDetails.paid_loan),
+            remaining:parseInt(userDetails.remaining_loan)
+        }
+        const tenure={
+            completed:parseInt(userDetails.tenure_completed),
+            pending:parseInt(userDetails.tenure_remaining)
+        }
         return (
             <div>
                 <h6 className="text-right container-fluid font-weight-normal font-italic mt-2 p-2">Logged in as : User</h6>

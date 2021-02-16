@@ -6,10 +6,7 @@ const tableStyle = {
 };
 
 const Details = (props) => {
-  const { loantype, loan, tenure } = props.userDetails;
-  const { paid, remaining } = loan;
-  const { completed, pending } = tenure;
-
+  const {paid_loan,remaining_loan,tenure_completed,tenure_remaining} = props.userDetails
   return (
     <div className="card  shadow ">
       <div className="card-body">
@@ -23,15 +20,15 @@ const Details = (props) => {
           <tbody className="text-left h6 table-bordered font-weight-normal">
             <tr>
               <td className="font-weight-bold">Loan (in Rs.)</td>
-              <td>Paid : {paid}</td>
-              <td>Remaining : {remaining}</td>
-              <td>Total : {remaining + paid}</td>
+              <td>Paid : {paid_loan}</td>
+              <td>Remaining : {remaining_loan}</td>
+              <td>Total : {parseInt(remaining_loan) + parseInt(paid_loan)}</td>
             </tr>
             <tr>
               <td className="font-weight-bold">Tenure (in years)</td>
-              <td>Completed : {completed} </td>
-              <td>Pending : {pending} </td>
-              <td>Total : {completed + pending}</td>
+              <td>Completed : {tenure_completed} </td>
+              <td>Pending : {tenure_remaining} </td>
+              <td>Total : {parseInt(tenure_completed) + parseInt(tenure_remaining)}</td>
             </tr>
           </tbody>
         </table>
