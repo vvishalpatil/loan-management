@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Spinner from '../Spinner';
 import AdminChart from '../../AdminChart';
@@ -6,12 +6,15 @@ import AdminChart from '../../AdminChart';
 const AdminDash = () => {
 
     const [userList, setUserList] = useState([]);
+    const [loanChart, setLoanChart] = useState({});
     const [status, setStatus] = useState(false);
 
     useEffect(() => {
-        const getAllUsers = async() => {
-            const res = await axios.get('https://demo8567258.mockable.io/getAllUsers');
-            setUserList(res.data);
+        const getAllUsers = async () => {
+            const res = await axios.get('/getUsers');
+            console.log(res.data)
+            setUserList(res.data.users);
+            setLoanChart(res.data.loan_summary);
             setStatus(true);
         }
         getAllUsers();
@@ -22,14 +25,13 @@ const AdminDash = () => {
     }, []);
 
     const createTable = (user, index) => {
-        const {paid, remaining} = user.loan;
         return (
             <tr key={index}>
-                <td className="text-justify">{user.id}</td>
-                <td className="text-justify">{user.firstname}{user.lastname}</td>
-                <td className="text-justify">Rs. {remaining}</td>
-                <td className="text-justify">Rs. {paid}</td>
-                <td className="text-justify">Rs. {paid + remaining}</td>
+                <td className="text-justify">{user.user_id}</td>
+                <td className="text-justify">{user.first_name}{user.last_name}</td>
+                <td className="text-justify">Rs. {user.remaining_loan}</td>
+                <td className="text-justify">Rs. {user.paid_loan}</td>
+                <td className="text-justify">Rs. {parseInt(user.remaining_loan) + parseInt(user.paid_loan)}</td>
                 <td className="d-flex ">
                     <button className="container btn  btn-outline-primary">Edit</button>
                     <button className="container ml-2 btn btn-outline-danger" >Delete</button>
@@ -38,22 +40,20 @@ const AdminDash = () => {
         )
     }
 
-    if(status){
-        console.log(userList.users);
-        const {users} = userList;
+    if (status) {
         return (
             <div>
-                <br/>
+                <br />
                 <h6 className="text-right container-fluid font-weight-normal font-italic">Logged in as : Admin</h6>
                 <div className="container-fluid mt-2">
                     <div className="row mt-2 ">
-                        <div className="col-sm-3 mb-2"> 
-                            {/* <AdminChart loan = {loan} /> */}
+                        <div className="col-sm-3 mb-2">
+                            <AdminChart loan={loanChart} />
                         </div>
                         <div className="col-sm-9 mb-2">
                             <div className="container-fluid">
                                 <table className="table mt-2 shadow table-striped   bg-light animate__animated animate__fadeIn">
-                                    <thead className="text-left text-light" style={{backgroundColor:"#5161ce"}}>
+                                    <thead className="text-left text-light" style={{ backgroundColor: "#5161ce" }}>
                                         <tr>
                                             <th className="h6">ID</th>
                                             <th className="h6">Name</th>
@@ -64,7 +64,8 @@ const AdminDash = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {users.map(createTable)}
+                                        {userList.map(createTable
+                                        )}
                                     </tbody>
                                 </table>
                             </div>
@@ -73,10 +74,10 @@ const AdminDash = () => {
                 </div>
             </div>
         )
-    }else {
+    } else {
         console.log("else", "loading");
         return (
-            <Spinner/>
+            <Spinner />
         )
     }
 }

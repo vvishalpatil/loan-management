@@ -4,9 +4,9 @@ import { Doughnut } from "react-chartjs-2";
 export default class AdminChart extends Component {
   constructor(props) {
     super(props);
-    const { paid, remaining } = this.props.loan;
+    const { total_paid, total_remaining } = this.props.loan;
     this.state = {
-      total: paid + remaining,
+      total: total_paid + total_remaining,
       chartData: {
         labels: ["Remaining", "Paid"],
         datasets: [
@@ -15,7 +15,7 @@ export default class AdminChart extends Component {
             borderColor: "white",
             // hoverBorderColor : 'slateblue',
             // hoverBackgroundColor : 'gold',
-            data: [remaining, paid],
+            data: [total_remaining, total_paid],
           },
         ],
       },
