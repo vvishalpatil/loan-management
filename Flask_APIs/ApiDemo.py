@@ -33,7 +33,7 @@ def pay_loan(uid, amount):
     '''
     cur.execute(query1, str(uid))
     res1 = cur.fetchone()
-    new_remaining_loan = int(res1['reamaining_loan']) - amount
+    new_remaining_loan = int(res1['remaining_loan']) - amount
     print(new_remaining_loan)
     cur.execute(query2, (new_remaining_loan, uid))
     mysql.connection.commit()
