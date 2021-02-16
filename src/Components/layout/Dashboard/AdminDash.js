@@ -26,17 +26,36 @@ const AdminDash = () => {
 
     const createTable = (user, index) => {
         return (
-            <tr key={index}>
+            <React.Fragment key={index}>
+            <tr>
                 <td className="text-justify">{user.user_id}</td>
                 <td className="text-justify">{user.first_name}{user.last_name}</td>
                 <td className="text-justify">Rs. {user.remaining_loan}</td>
                 <td className="text-justify">Rs. {user.paid_loan}</td>
                 <td className="text-justify">Rs. {parseInt(user.remaining_loan) + parseInt(user.paid_loan)}</td>
                 <td className="d-flex ">
-                    <button className="container btn  btn-outline-primary">Edit</button>
+                <button type="button" className="container ml-2 btn btn-outline-info" data-toggle="modal" data-target={String(user.user_id)}>
+                    View Chart
+                </button>
                     <button className="container ml-2 btn btn-outline-danger" >Delete</button>
                 </td>
             </tr>
+            <div className="modal animate__animated animate__zoomIn" id={String(user.user_id)}>
+              <div className="modal-dialog modal-lg modal-dialog-centered">
+                <div className="modal-content">
+                  <div className="modal-header">
+                      <button type="button" className="close" data-dismiss="modal">&times;</button>
+                  </div>
+                  <div className="modal-body">
+                    <div className="card-body mx-auto container bg-white">
+                      <h2>Forecast Chart</h2>
+                      {/* <Line data={this.state.chartData}  /> */}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+           </React.Fragment>
         )
     }
 
