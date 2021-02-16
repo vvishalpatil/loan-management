@@ -3,6 +3,8 @@ import axios from 'axios';
 import Spinner from '../Spinner';
 import AdminChart from '../../AdminChart';
 
+// testing git pull
+
 const AdminDash = () => {
 
     const [userList, setUserList] = useState([]);
@@ -64,8 +66,7 @@ const AdminDash = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {userList.map(createTable
-                                        )}
+                                        {userList.map(createTable)}
                                     </tbody>
                                 </table>
                             </div>
