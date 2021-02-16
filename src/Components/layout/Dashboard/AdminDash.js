@@ -3,8 +3,6 @@ import axios from 'axios';
 import Spinner from '../Spinner';
 import AdminChart from '../../AdminChart';
 
-// testing git pull
-
 const AdminDash = () => {
 
     const [userList, setUserList] = useState([]);
