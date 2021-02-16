@@ -19,13 +19,15 @@ def index():
     res = cur.fetchall()
     return jsonify({"users": res})
 
-
+# api to pay and make information changes according to payment in database
 @app.route('/payLoan/<int:uid>/<int:amount>', methods=['GET'])
 def pay_loan(uid, amount):
     cur = mysql.connection.cursor()
+    # to get remaining loan of perticular user
     query1 = '''SELECT remaining_loan 
              from loan_info 
              WHERE loan_info.user_id=%s'''
+    # to update remaining loan into database after subtracting payment amount from previous remaining
     query2 = '''
             UPDATE loan_info
             SET remaining_loan = %s
@@ -33,10 +35,10 @@ def pay_loan(uid, amount):
     '''
     cur.execute(query1, str(uid))
     res1 = cur.fetchone()
-    new_remaining_loan = int(res1['remaining_loan']) - amount
+    new_remaining_loan = int(res1['remaining_loan']) - amount # subtracting payment amount from remaining loan amount
     print(new_remaining_loan)
     cur.execute(query2, (new_remaining_loan, uid))
-
+    # to update transaction information into transaction table
     query3 = '''
     INSERT into transaction_info (user_id, note, paid_amount, new_remaining) 
     VALUES(%s,"installment money " , %s,%s)
@@ -44,14 +46,17 @@ def pay_loan(uid, amount):
     '''
     cur.execute(query3,(str(uid),str(amount),str(new_remaining_loan)))
     mysql.connection.commit()
-    # code to add data in transaction table(uid, tid, timestamp , note, Paid amount , new remaining)
+
     return jsonify({'data': [uid, amount]})
 
 
+# all user details api for admin dashboard
 @app.route('/getUsers', methods=['GET'])
 def get_users():
     cur = mysql.connection.cursor()
+    # to get all user information
     query1 = "SELECT * FROM user_info, loan_info where user_info.user_id=loan_info.user_id;"
+    # to get total remaining loan amount
     query2 = "SELECT sum(paid_loan) as total_paid , SUM(remaining_loan) as total_remaining from loan_info;"
 
     try:
@@ -67,6 +72,7 @@ def get_users():
         return jsonify({"message": "something went wrong"})
 
 
+# user information api
 @app.route('/getUserDetails/<int:uid>', methods=['GET'])
 def get_user_details(uid):
     cursor = mysql.connection.cursor()
@@ -82,6 +88,7 @@ def get_user_details(uid):
         return jsonify({"message": "something went wrong"})
 
 
+# profile information
 @app.route('/getUserProfile/<int:uid>', methods=['GET'])
 def profile_info(uid):
     cursor = mysql.connection.cursor()
@@ -97,6 +104,7 @@ def profile_info(uid):
         return jsonify({"message": "something went wrong"})
 
 
+# profile update
 @app.route('/updateUserProfile/<int:uid>', methods=['PUT'])
 def update_user_profile(uid):
     cursor = mysql.connection.cursor()
