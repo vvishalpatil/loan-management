@@ -8,7 +8,7 @@ const AdminDash = () => {
     const [userList, setUserList] = useState([]);
     const [loanChart, setLoanChart] = useState({});
     const [status, setStatus] = useState(false);
-
+    
     useEffect(() => {
         const getAllUsers = async () => {
             const res = await axios.get('/getUsers');
