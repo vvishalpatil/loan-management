@@ -79,13 +79,13 @@ const Details = (props) => {
                   Current Installment
               </div>
                 <hr></hr>
-                <p class="card-text my-2">Amount : Rs. 4000 </p>
+                <p className="card-text my-2">Amount : Rs. 4000 </p>
                 <p className="card-text">Due Date: 3/03/2021 </p>
-                <button class="btn btn-primary mt-1">Pay Now</button>
+                <button className="btn btn-primary mt-1">Pay Now</button>
               </div>
             </div>
             <div className="container mt-4">
-              <button class="btn btn-outline-success btn-block ">Close Loan</button>
+              <button className="btn btn-outline-success btn-block ">Close Loan</button>
             </div>
           </div>
         </div>

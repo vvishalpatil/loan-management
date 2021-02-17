@@ -12,9 +12,13 @@ const UserDash = () => {
 
     useEffect(() => {
         const getDetails = async(id) => {
-            const res = await axios.get(`/getUserDetails/${id}`);
-            setUserDetails(res.data.data);
-            setStatus(true);
+            try{
+                const res = await axios.get(`/getUserDetails/${id}`);
+                setUserDetails(res.data.data);
+                setStatus(true);
+            }catch(err){
+                console.log(err);
+            }
         }
         getDetails(1);
 
@@ -35,8 +39,7 @@ const UserDash = () => {
         }
         return (
             <div>
-                <h6 className="text-right container-fluid font-weight-normal font-italic mt-2 p-2">Logged in as : User</h6>
-                <div className="container-fluid mt-2">
+                <div className="container-fluid mt-4">
                     <div className="row mt-2 ">
                         <div className="col-sm-3 mb-2"> 
                             <LoanChart loan = {loan} />
