@@ -4,9 +4,10 @@ import { Doughnut } from "react-chartjs-2";
 export default class AdminChart extends Component {
   constructor(props) {
     super(props);
-    const { total_paid, total_remaining } = this.props.loan;
+    const { total_paid, total_remaining, tenure } = this.props.loan;
     this.state = {
       total: total_paid + total_remaining,
+      tenure:tenure,
       chartData: {
         labels: ["Remaining", "Paid"],
         datasets: [
@@ -63,8 +64,15 @@ export default class AdminChart extends Component {
             {" "}
             Total Owed : Rs. {this.state.total}.
           </div>
+          <div className="card-text text-center mt-4 h6 ">
+            {" "}
+            Loan Recovery Timespan : {this.state.tenure} yrs.
+          </div>
         </div>
       </div>
     );
   }
 }
+
+
+
