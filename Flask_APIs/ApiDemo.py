@@ -57,7 +57,9 @@ def get_users():
     # to get all user information
     query1 = "SELECT * FROM user_info, loan_info where user_info.user_id=loan_info.user_id;"
     # to get total remaining loan amount
-    query2 = "SELECT sum(paid_loan) as total_paid , SUM(remaining_loan) as total_remaining, MAX(tenure_remaining) as tenure from loan_info;"
+    query2 = '''
+    SELECT sum(paid_loan) as total_recovered , SUM(total_loan) as total_distributed, MAX(loan_tenure - tenure_completed) as tenure
+    from loan_info;'''
     try:
         cur.execute(query1)
         res1 = cur.fetchall()

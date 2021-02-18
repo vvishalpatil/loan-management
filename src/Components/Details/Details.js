@@ -6,7 +6,9 @@ const tableStyle = {
 };
 
 const Details = (props) => {
-  const {paid_loan,remaining_loan,tenure_completed,tenure_remaining} = props.userDetails
+  const {total_loan,paid_loan,loan_tenure,tenure_completed,installment_due_date,installment_amt} = props.userDetails;
+  const tenure_remaining= loan_tenure-tenure_completed;
+  const remaining_loan=total_loan-paid_loan;
   return (
     <div className="card  shadow ">
       <div className="card-body">
@@ -20,15 +22,16 @@ const Details = (props) => {
           <tbody className="text-left h6 table-bordered font-weight-normal">
             <tr>
               <td className="font-weight-bold">Loan (in Rs.)</td>
+              <td>Loan Amount : {parseInt(remaining_loan) + parseInt(paid_loan)}</td>
               <td>Paid : {paid_loan}</td>
               <td>Remaining : {remaining_loan}</td>
-              <td>Total : {parseInt(remaining_loan) + parseInt(paid_loan)}</td>
+              
             </tr>
             <tr>
               <td className="font-weight-bold">Tenure (in years)</td>
-              <td>Completed : {tenure_completed} </td>
-              <td>Pending : {tenure_remaining} </td>
               <td>Total : {parseInt(tenure_completed) + parseInt(tenure_remaining)}</td>
+              <td>Completed : {tenure_completed} </td>
+              <td>Remaining : {tenure_remaining} </td>
             </tr>
           </tbody>
         </table>
@@ -79,8 +82,8 @@ const Details = (props) => {
                   Current Installment
               </div>
                 <hr></hr>
-                <p className="card-text my-2">Amount : Rs. 4000 </p>
-                <p className="card-text">Due Date: 3/03/2021 </p>
+                <p className="card-text my-2">Amount : Rs. {installment_amt} </p>
+                <p className="card-text">Due Date: {installment_due_date} </p>
                 <button className="btn btn-primary mt-1">Pay Now</button>
               </div>
             </div>

@@ -4,19 +4,19 @@ import { Doughnut } from "react-chartjs-2";
 export default class AdminChart extends Component {
   constructor(props) {
     super(props);
-    const { total_paid, total_remaining, tenure } = this.props.loan;
+    const { total_recovered, total_distributed, tenure } = this.props.loan;
     this.state = {
-      total: total_paid + total_remaining,
+      total: total_recovered + total_distributed,
       tenure:tenure,
       chartData: {
-        labels: ["Remaining", "Paid"],
+        labels: ["Remaining", "Recovered"],
         datasets: [
           {
             backgroundColor: ["rgb(59, 120, 156)", "#76b900"],
             borderColor: "white",
             // hoverBorderColor : 'slateblue',
             // hoverBackgroundColor : 'gold',
-            data: [total_remaining, total_paid],
+            data: [total_distributed, total_recovered],
           },
         ],
       },
@@ -62,11 +62,11 @@ export default class AdminChart extends Component {
           <hr />
           <div className="card-text text-center mt-3 h6 ">
             {" "}
-            Total Owed : Rs. {this.state.total}.
+            Total Loan Distributed : Rs. {this.state.total}.
           </div>
           <div className="card-text text-center mt-4 h6 ">
             {" "}
-            Loan Recovery Timespan : {this.state.tenure} yrs.
+            Estimated Recovery Time : {this.state.tenure} yrs.
           </div>
         </div>
       </div>

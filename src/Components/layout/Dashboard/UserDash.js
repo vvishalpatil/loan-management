@@ -31,11 +31,11 @@ const UserDash = () => {
     if(status){
         const loan={
             paid:parseInt(userDetails.paid_loan),
-            remaining:parseInt(userDetails.remaining_loan)
+            remaining:parseInt(userDetails.total_loan) - parseInt(userDetails.paid_loan)
         }
         const tenure={
             completed:parseInt(userDetails.tenure_completed),
-            pending:parseInt(userDetails.tenure_remaining)
+            remaining:parseInt(userDetails.loan_tenure) - parseInt( userDetails.tenure_completed)
         }
         return (
             <div>

@@ -4,18 +4,18 @@ import {Doughnut} from "react-chartjs-2";
 export default class TenureChart extends Component {
   constructor(props) {
     super(props);
-    const { completed, pending } = this.props.tenure;
+    const { completed, remaining } = this.props.tenure;
     this.state = {
-      total: completed + pending,
+      total: completed + remaining,
       chartData: {
-        labels: ["Pending", "Completed"],
+        labels: ["Remaining", "Completed"],
         datasets: [
           {
             backgroundColor: ["rgb(59, 120, 156)", "rgb(138, 83, 163)"],
             borderColor: "white",
             // hoverBorderColor : 'slateblue',
             // hoverBackgroundColor : 'gold',
-            data: [pending, completed],
+            data: [remaining, completed],
           },
         ],
       },
