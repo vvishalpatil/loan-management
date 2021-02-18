@@ -20,34 +20,50 @@ def index():
     return jsonify({"users": res})
 
 # api to pay and make information changes according to payment in database
-@app.route('/payLoan/<int:uid>/<int:amount>', methods=['GET'])
-def pay_loan(uid, amount):
+@app.route('/payLoan/<int:uid>/<int:lid>/<int:amount>', methods=['GET'])
+def pay_loan(uid,lid, amount):
     cur = mysql.connection.cursor()
     # to get remaining loan of perticular user
-    query1 = '''SELECT remaining_loan 
+    query1 = '''SELECT paid_loan ,total_loan 
              from loan_info 
-             WHERE loan_info.user_id=%s'''
+             WHERE loan_info.user_id=%s and loan_info.loan_id=%s'''
     # to update remaining loan into database after subtracting payment amount from previous remaining
     query2 = '''
             UPDATE loan_info
-            SET remaining_loan = %s
-            WHERE user_id=%s
+            SET paid_loan = %s , tenure_completed = tenure_completed + 1
+            WHERE user_id=%s and loan_id=%s
     '''
-    cur.execute(query1, str(uid))
-    res1 = cur.fetchone()
-    new_remaining_loan = int(res1['remaining_loan']) - amount # subtracting payment amount from remaining loan amount
-    print(new_remaining_loan)
-    cur.execute(query2, (new_remaining_loan, uid))
-    # to update transaction information into transaction table
     query3 = '''
-    INSERT into transaction_info (user_id, note, paid_amount, new_remaining) 
-    VALUES(%s,"installment money " , %s,%s)
+        INSERT into transaction_info (user_id,loan_id, note, paid_amount) 
+        VALUES(%s,%s,"installment money " , %s)
+
+        '''
+    query4='''
+             UPDATE loan_info 
+             SET loan_status="closed"
+             where user_id = %s and loan_id = %s
             
-    '''
-    cur.execute(query3,(str(uid),str(amount),str(new_remaining_loan)))
+            '''
+
+    cur.execute(query1, (str(uid),str(lid)))
+    res1 = cur.fetchone()
+    new_paid_loan = int(res1['paid_loan']) + amount # adding payment amount to paid loan amount
+
+    print(new_paid_loan)
+    if int(res1['total_loan'])== int(new_paid_loan):
+        print('loan closed')
+        msg='loan closed and amount of '+str(amount) +' Rs paid'
+        cur.execute(query4, (str(uid), str(lid)))
+
+    else:
+        msg = 'amount of ' + str(amount) + ' Rs Paid'
+    cur.execute(query2, (new_paid_loan, uid,lid))
+    # to update transaction information into transaction table
+
+    cur.execute(query3,(str(uid),str(lid),str(amount)))
     mysql.connection.commit()
 
-    return jsonify({'data': [uid, amount]})
+    return jsonify({'data': [uid,lid, amount],'msg':msg})
 
 
 # all user details api for admin dashboard
