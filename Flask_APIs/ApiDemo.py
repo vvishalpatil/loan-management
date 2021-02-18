@@ -19,6 +19,7 @@ def index():
     res = cur.fetchall()
     return jsonify({"users": res})
 
+
 # api to pay and make information changes according to payment in database
 @app.route('/payLoan/<int:uid>/<int:amount>', methods=['GET'])
 def pay_loan(uid, amount):
@@ -35,7 +36,7 @@ def pay_loan(uid, amount):
     '''
     cur.execute(query1, str(uid))
     res1 = cur.fetchone()
-    new_remaining_loan = int(res1['remaining_loan']) - amount # subtracting payment amount from remaining loan amount
+    new_remaining_loan = int(res1['remaining_loan']) - amount  # subtracting payment amount from remaining loan amount
     print(new_remaining_loan)
     cur.execute(query2, (new_remaining_loan, uid))
     # to update transaction information into transaction table
@@ -44,7 +45,7 @@ def pay_loan(uid, amount):
     VALUES(%s,"installment money " , %s,%s)
             
     '''
-    cur.execute(query3,(str(uid),str(amount),str(new_remaining_loan)))
+    cur.execute(query3, (str(uid), str(amount), str(new_remaining_loan)))
     mysql.connection.commit()
 
     return jsonify({'data': [uid, amount]})
@@ -74,8 +75,10 @@ def get_users():
 
 
 # user information api
-@app.route('/getUserDetails/<int:uid>', methods=['GET'])
-def get_user_details(uid):
+@app.route('/getUserDetails/', methods=['GET'])
+def get_user_details():
+    uid = request.args.get('id')
+    loantype = request.args.get('loantype')
     cursor = mysql.connection.cursor()
     try:
         cursor.execute('''SELECT * FROM user_info AS user, loan_info AS loan 
