@@ -21,9 +21,14 @@ def index():
 
 
 # api to pay and make information changes according to payment in database
-@app.route('/payLoan/<int:uid>/<int:lid>/<int:amount>', methods=['GET'])
-def pay_loan(uid,lid, amount):
+@app.route('/payLoan/', methods=['GET'])
+def pay_loan():
+    uid=request.args.get('uid')
+    lid=request.args.get('lid')
+    amount=request.args.get('amount')
+    print(uid,lid,amount)
     cur = mysql.connection.cursor()
+
     # to get remaining loan of perticular user
     query1 = '''SELECT paid_loan ,total_loan 
              from loan_info 
@@ -48,7 +53,7 @@ def pay_loan(uid,lid, amount):
 
     cur.execute(query1, (str(uid),str(lid)))
     res1 = cur.fetchone()
-    new_paid_loan = int(res1['paid_loan']) + amount # adding payment amount to paid loan amount
+    new_paid_loan = int(res1['paid_loan']) + int(amount) # adding payment amount to paid loan amount
 
     print(new_paid_loan)
     if int(res1['total_loan'])== int(new_paid_loan):
