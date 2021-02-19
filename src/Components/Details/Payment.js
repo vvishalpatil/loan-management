@@ -41,7 +41,7 @@ export default class Payment extends Component {
                 <div className='container '>
                     
                     <div className="jumbotron p-5 m-4">
-                        <p className="display-1">payment processing</p>
+                        <p className="display-4">payment processing</p>
                         <SyncLoader size={10 }  color={'gray'}></SyncLoader>
                     </div>
                    
