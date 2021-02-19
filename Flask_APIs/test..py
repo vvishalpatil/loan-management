@@ -1,6 +1,7 @@
 import requests
 from pprint import pprint
 
+
 # res = requests.get(f'http://127.0.0.1:5000/getUserDetails/{2}')
 # res = requests.get('http://127.0.0.1:5000/profileInfo', params={'uid': 1})
 d = {

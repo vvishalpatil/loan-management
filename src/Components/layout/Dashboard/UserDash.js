@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import LoanChart from '../../LoanChart';
 import axios from 'axios';
 import TenureChart from '../../TenureChart';
@@ -36,7 +36,7 @@ const UserDash = () => {
                 const res = await axios.get(`/getUserLoanDetails/`,{params : params});
                 setUserDetails(res.data.data);
                 setLoaded(true);
-            }catch(err){
+            } catch (err) {
                 console.log(err);
             }
         }
@@ -78,10 +78,11 @@ const UserDash = () => {
             }
         }else {
             return (
-                <Spinner/>
+                <Spinner />
             );
         }
     }
+   
 
     const handleChange = (e) => {
         setLoanType(e.target.value);
@@ -115,14 +116,14 @@ const UserDash = () => {
                                     : null
                                 }
                             </select>
-                        </div> 
+                        </div>
                     </div>
                 </div>
             </div>
-           <DisplayResults/>
+            <DisplayResults />
         </div>
     );
-    
+
 }
 
 export default UserDash;

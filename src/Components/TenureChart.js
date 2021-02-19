@@ -55,8 +55,8 @@ export default class TenureChart extends Component {
           <Doughnut
             data={this.state.chartData}
             options={this.state.options}
-            height={30}
-            width={40}
+            height={40}
+            width={50}
           />
           <hr />
           <div className="card-text text-center mt-3 h6 ">

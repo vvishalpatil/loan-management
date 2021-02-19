@@ -9,7 +9,7 @@ export default class LoanChart extends Component {
     this.state = {
       total: paid + remaining,
       chartData: {
-        labels: ["Remaining", "Paid"],
+        labels: ["Remaining loan", "Paid loan"],
         datasets: [
           {
             backgroundColor: ["rgb(59, 120, 156)", "#76b900"],
@@ -56,8 +56,8 @@ export default class LoanChart extends Component {
           <Doughnut
             data={this.state.chartData}
             options={this.state.options}
-            height={30}
-            width={40}
+            height={40}
+            width={50}
           />
           <hr />
           <div className="card-text text-center mt-3 h6 ">

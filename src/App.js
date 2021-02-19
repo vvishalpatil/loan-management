@@ -6,6 +6,7 @@ import Navbar from './Components/layout/Navbar/Navbar';
 import Profile from './Components/Profile/Profile';
 import AdminDash from './Components/layout/Dashboard/AdminDash';
 import LoanForm from './Components/LoanForm';
+import Payment from './Components/Details/Payment';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route exact path="/admin" component={AdminDash}/>
           <Route exact path="/profile" component={Profile}/>
           <Route exact path="/newloan" component={LoanForm}/>
+          <Route exact path="/payment" component={Payment}/>
         </Switch>
         <br/>
         <Footer/>
