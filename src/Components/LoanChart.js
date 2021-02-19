@@ -62,7 +62,7 @@ export default class LoanChart extends Component {
           <hr />
           <div className="card-text text-center mt-3 h6 ">
             {" "}
-            Total Owed : Rs. {this.state.total}.
+            Loan Amount : Rs. {this.state.total}.
           </div>
         </div>
       </div>

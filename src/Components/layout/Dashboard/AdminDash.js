@@ -6,7 +6,7 @@ import LoanChart from '../../LoanChart';
 import TenureChart from '../../TenureChart';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCalendarAlt, faEnvelope, faUser, faVenusMars, faLandmark, faMobileAlt } from '@fortawesome/free-solid-svg-icons';
+import { faCalendarAlt, faEnvelope, faLandmark, faMobileAlt } from '@fortawesome/free-solid-svg-icons';
 
 const AdminDash = () => {
 

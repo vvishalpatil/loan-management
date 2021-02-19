@@ -7,10 +7,10 @@ const tableStyle = {
 
 const Details = (props) => {
   const {total_loan,paid_loan,loan_tenure,tenure_completed,installment_due_date,installment_amt} = props.userDetails;
-  const tenure_remaining= loan_tenure-tenure_completed;
-  const remaining_loan=total_loan-paid_loan;
+  const tenure_remaining = loan_tenure - tenure_completed;
+  const remaining_loan = total_loan - paid_loan;
   return (
-    <div className="card  shadow ">
+    <div className="card shadow">
       <div className="card-body">
         <div
           className="card-header shadow h5 rounded text-white"
@@ -18,27 +18,43 @@ const Details = (props) => {
         >
           Details
         </div>
-        <table className=" mt-3 table container table-responsive" style={tableStyle}>
-          <tbody className="text-left h6 table-bordered font-weight-normal">
-            <tr>
-              <td className="font-weight-bold">Loan (in Rs.)</td>
-              <td>Loan Amount : {parseInt(remaining_loan) + parseInt(paid_loan)}</td>
-              <td>Paid : {paid_loan}</td>
-              <td>Remaining : {remaining_loan}</td>
-              
-            </tr>
-            <tr>
-              <td className="font-weight-bold">Tenure (in years)</td>
-              <td>Total : {parseInt(tenure_completed) + parseInt(tenure_remaining)}</td>
-              <td>Completed : {tenure_completed} </td>
-              <td>Remaining : {tenure_remaining} </td>
-            </tr>
-          </tbody>
-        </table>
-        <div className="row">
-          <div className="col-lg-7">
-            <div className="card shadow-sm">
-
+        <div className="row mt-2">
+          <div className="col-sm-6">
+            <div className="card shadow-sm mt-3">
+              <div className="card-body">
+                <div className="card-header h6 rounded text-white"
+                  style={{backgroundColor: "#5161ce" }}>
+                  Loan (in Rs.)
+              </div>
+                <hr></hr>
+                <div className="text-left ml-2  font-italic">
+                  <p className="card-text">Loan Amount : {parseInt(remaining_loan) + parseInt(paid_loan)} Rs. </p>
+                  <p className="card-text">Paid : {paid_loan} Rs. </p>
+                  <p className="card-text">Remaining : {remaining_loan} Rs. </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="col-sm-6">
+            <div className="card shadow-sm mt-3">
+                <div className="card-body">
+                  <div className="card-header h6 rounded text-white"
+                    style={{backgroundColor: "#76b900" }}>
+                    Tenure (in Years.)
+                </div>
+                  <hr></hr>
+                  <div className="text-center  font-italic">
+                    <p className="card-text">Total : {parseInt(tenure_completed) + parseInt(tenure_remaining)} </p>
+                    <p className="card-text">Completed : {tenure_completed} </p>
+                    <p className="card-text">Remaining : {tenure_remaining} </p>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+        <div className="row ">
+          <div className="col-sm-7">
+            <div className="card mt-4 shadow-sm">
               <div className="card-body">
                 <div className="card-header h6 rounded text-white"
                   style={{ backgroundColor: "#5161ce" }}>
@@ -75,7 +91,7 @@ const Details = (props) => {
             </div>
           </div>
           <div className="col-sm">
-            <div className="card shadow-sm">
+            <div className="card mt-4 shadow-sm">
               <div className="card-body">
                 <div className="card-header h6 rounded text-white"
                   style={{ backgroundColor: "#76b900" }}>
