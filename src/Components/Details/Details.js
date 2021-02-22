@@ -10,17 +10,13 @@ const tableStyle = {
 
 const Details = (props) => {
 
-  const {
-    total_loan,
-    paid_loan,
-    loan_tenure,
-    tenure_completed,
-    installment_due_date,
-    installment_amt,
-  } = props.userDetails;
+  const {total_loan,paid_loan,loan_tenure,tenure_completed,installment_due_date,installment_amt} = props.userDetails;
+  const tenure_remaining= loan_tenure-tenure_completed;
+  const remaining_loan=total_loan-paid_loan;
+  const transaction_history = props.transactionHistory
 
-  const tenure_remaining = loan_tenure - tenure_completed;
-  const remaining_loan = total_loan - paid_loan;
+  console.log(transaction_history,'details component')
+  console.log(transaction_history)
 
   const Pay = () => {
     const {
@@ -151,32 +147,29 @@ const Details = (props) => {
                   style={{ backgroundColor: "#5161ce" }}
                 >
                   Transaction History
-                </div>
-                <table className="table ">
+              </div>
+                <table className="table table-responsive ">
                   <thead>
                     <tr>
                       <th scope="col">Id</th>
-                      {/* <th scope="col">Note</th> */}
                       <th scope="col">Amount</th>
                       <th scope="col">Date</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <th scope="row">1</th>
-                      <td>Rs. 5000</td>
-                      <td>3/4/2020</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">2</th>
-                      <td>Rs. 1300</td>
-                      <td>2/6/2020</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">3</th>
-                      <td>Rs. 4000</td>
-                      <td>12/9/2020</td>
-                    </tr>
+                   
+                      
+                      {transaction_history?transaction_history.map((res,index)=>(
+                        <tr key={index}>
+                           <th scope="row">{res.tid}</th>
+                           <td>Rs.{res.paid_amount} </td>
+                           <td>{res.date.slice(4,16)}</td>
+                        </tr>
+                        )):null
+                        }
+                     
+                    
+                   
                   </tbody>
                 </table>
               </div>

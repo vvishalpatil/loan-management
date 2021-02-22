@@ -28,6 +28,7 @@ const UserDash = () => {
 
     const [userDetails, setUserDetails] = useState(null);
     const [loaded, setLoaded] = useState(false);
+    const [transactionHistory,setTransactionHistory] = useState(null);
 
     useEffect(() => {
         const getLoanDetails = async(id) => {
@@ -35,7 +36,11 @@ const UserDash = () => {
                 const params = {"id":id, "loantype":loanType};
                 const res = await axios.get(`/getUserLoanDetails/`,{params : params});
                 setUserDetails(res.data.data);
+                setTransactionHistory(res.data.transaction_history)
+                console.log(res.data.transaction_history,'user dash state')
+                console.log(res.data)
                 setLoaded(true);
+                
             } catch (err) {
                 console.log(err);
             }
@@ -64,7 +69,7 @@ const UserDash = () => {
                                     <LoanChart loan = {loan} />
                                 </div>
                                 <div className="col-sm-6 mb-2">
-                                    <Details userDetails = {userDetails}/>   
+                                    <Details userDetails = {userDetails} transactionHistory={transactionHistory}/>   
                                 </div>
                                 <div className="col-sm-3"> 
                                     <TenureChart tenure = {tenure}/>
