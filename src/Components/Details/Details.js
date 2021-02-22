@@ -9,14 +9,19 @@ const tableStyle = {
 };
 
 const Details = (props) => {
+  const {
+    total_loan,
+    paid_loan,
+    loan_tenure,
+    tenure_completed,
+    installment_due_date,
+    installment_amt,
+  } = props.userDetails;
+  
+  const tenure_remaining = loan_tenure - tenure_completed;
+  const remaining_loan = total_loan - paid_loan;
+  const transaction_history = props.transactionHistory;
 
-  const {total_loan,paid_loan,loan_tenure,tenure_completed,installment_due_date,installment_amt} = props.userDetails;
-  const tenure_remaining= loan_tenure-tenure_completed;
-  const remaining_loan=total_loan-paid_loan;
-  const transaction_history = props.transactionHistory
-
-  console.log(transaction_history,'details component')
-  console.log(transaction_history)
 
   const Pay = () => {
     const {
@@ -147,7 +152,7 @@ const Details = (props) => {
                   style={{ backgroundColor: "#5161ce" }}
                 >
                   Transaction History
-              </div>
+                </div>
                 <table className="table table-responsive ">
                   <thead>
                     <tr>
@@ -157,19 +162,15 @@ const Details = (props) => {
                     </tr>
                   </thead>
                   <tbody>
-                   
-                      
-                      {transaction_history?transaction_history.map((res,index)=>(
-                        <tr key={index}>
-                           <th scope="row">{res.tid}</th>
-                           <td>Rs.{res.paid_amount} </td>
-                           <td>{res.date.slice(4,16)}</td>
-                        </tr>
-                        )):null
-                        }
-                     
-                    
-                   
+                    {transaction_history
+                      ? transaction_history.map((res, index) => (
+                          <tr key={index}>
+                            <th scope="row">{res.tid}</th>
+                            <td>Rs.{res.paid_amount} </td>
+                            <td>{res.date.slice(4, 16)}</td>
+                          </tr>
+                        ))
+                      : null}
                   </tbody>
                 </table>
               </div>
