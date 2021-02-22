@@ -23,13 +23,59 @@ def index():
     return jsonify({"users": res})
 
 
+@app.route('/applyForLoan/<int:uid>', methods=['POST'])
+def apply_for_loan(uid):
+    data = request.json
+    total_loan = int(data['loan_amount'])
+    loan_type = data['loan_type']
+    tenure = int(data['tenure'])
+    print(total_loan, tenure, loan_type, uid)
+    # to assign interest rate from loan type
+    if loan_type == 'Personal Loan':
+        interest_rate = 17
+    elif loan_type == 'Home Loan':
+        interest_rate = 7
+    elif loan_type == 'Car Loan':
+        interest_rate = 9
+    # to calculate monthly installment amount
+    installment_amt = round((total_loan + (total_loan * interest_rate * tenure) / 100) / (tenure * 12), 2)
+
+    print(installment_amt)
+
+    # to find First Installment Due date
+    today = datetime.today()
+    if today.month == 12:
+        new_date = date.datetime(today.year + 1, 1, 31)
+    else:
+        last_day_of_month = calendar.monthrange(today.year, today.month + 1)[1]
+        new_date = date.datetime(today.year, today.month + 1, last_day_of_month)
+    installment_due_date = new_date.strftime("%Y-%m-%d")
+    print(installment_due_date, 'installment date')
+
+    # query to insert into loan table
+    try:
+        query = '''
+                INSERT into loan_info (`user_id`, `loan_type`, `total_loan`, `loan_tenure`,`interest_rate`, `installment_amt`, `installment_due_date`)
+                VALUES(%s,%s,%s,%s,%s,%s,%s)
+            '''
+        values = (str(uid), loan_type, str(total_loan), str(tenure), str(interest_rate), str(installment_amt),
+                  installment_due_date)
+        cur = mysql.connection.cursor()
+        cur.execute(query, values)
+        mysql.connection.commit()
+        return jsonify({'status': True, 'msg': 'Successfully Applied'})
+
+    except Exception as e:
+        return jsonify({'status': False, 'msg': 'something went wrong, Can\'t apply for loan'})
+
+
 # api to pay and make information changes according to payment in database
 @app.route('/payLoan/', methods=['GET'])
 def pay_loan():
-    uid=request.args.get('uid')
-    lid=request.args.get('lid')
-    amount=request.args.get('amount')
-    print(uid,lid,amount)
+    uid = request.args.get('uid')
+    lid = request.args.get('lid')
+    amount = request.args.get('amount')
+    print(uid, lid, amount)
     cur = mysql.connection.cursor()
 
     # to get remaining loan of perticular user
@@ -56,17 +102,18 @@ def pay_loan():
 
     cur.execute(query1, (str(uid), str(lid)))
     res1 = cur.fetchone()
-    new_paid_loan = int(res1['paid_loan']) + int(amount) # adding payment amount to paid loan amount
-    #code to calculate next installment date
+    new_paid_loan = int(res1['paid_loan']) + int(amount)  # adding payment amount to paid loan amount
+    # code to calculate next installment date
     db_date = res1['installment_due_date']
     date_time_obj = date.datetime.strptime(db_date, '%Y-%m-%d')
-    last_day_of_month_2 = calendar.monthrange(date_time_obj.year, date_time_obj.month + 1)[1]
+
     if date_time_obj.month == 12:
-        new_installment_date = date.datetime(date_time_obj.year + 1, 1, last_day_of_month_2)
+        new_installment_date = date.datetime(date_time_obj.year + 1, 1, 31)
     else:
+        last_day_of_month_2 = calendar.monthrange(date_time_obj.year, date_time_obj.month + 1)[1]
         new_installment_date = date.datetime(date_time_obj.year, date_time_obj.month + 1, last_day_of_month_2)
 
-    new_due_date=new_installment_date.strftime("%Y-%m-%d")
+    new_due_date = new_installment_date.strftime("%Y-%m-%d")
     print(new_paid_loan)
     if int(res1['total_loan']) == int(new_paid_loan):
         print('loan closed')
@@ -75,7 +122,7 @@ def pay_loan():
 
     else:
         msg = 'amount of ' + str(amount) + ' Rs Paid'
-    cur.execute(query2, (new_paid_loan,new_due_date, uid, lid))
+    cur.execute(query2, (new_paid_loan, new_due_date, uid, lid))
     # to update transaction information into transaction table
 
     cur.execute(query3, (str(uid), str(lid), str(amount)))
@@ -133,16 +180,25 @@ def get_loan_options(uid):
 def get_user_loan_details():
     uid = request.args.get('id')
     loan_type = request.args.get('loantype')
-    # loan_type = loan_type.split(' ')[0].lower()
     cursor = mysql.connection.cursor()
     print(loan_type)
     try:
+        last_three_transaction = '''
+              select tid,note,paid_amount ,date
+              from transaction_info,loan_info 
+              where loan_info.user_id=%s and loan_info.loan_type=%s and loan_info.loan_id=transaction_info.loan_id 
+              order by tid desc limit 3
+                    '''
+
         cursor.execute('''SELECT * FROM user_info AS user, loan_info AS loan 
                             WHERE user.user_id = %s AND loan.loan_type = %s AND user.user_id = loan.user_id;''',
                        (str(uid), loan_type))
         result = cursor.fetchone()
+        cursor.execute(last_three_transaction, (uid, loan_type))
+        result2 = cursor.fetchall()
+        print(result2)
         if result:
-            return jsonify({"status": "success", "data": result})
+            return jsonify({"status": "success", "data": result, 'transaction_history': result2})
         else:
             return jsonify({"status": "fail", "data": result})
     except Exception as e:
@@ -191,3 +247,6 @@ def update_user_profile(uid):
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+# for last three transaction
+# select * from (select * from transaction_info order by tid desc limit 3) as trans_history order by tid
