@@ -245,6 +245,39 @@ def update_user_profile(uid):
         return jsonify({"message": "something went wrong"})
 
 
+@app.route('/filterSearch/', methods=['GET'])
+def filter_search():
+    search_type = request.args.get("search_type")
+    search_key = request.args.get("search_key")
+    cursor = mysql.connection.cursor()
+    if search_type == "Name":
+        firstname = search_key
+        try:
+            firstname = search_key.split(" ")[0] + '%'
+        except Exception as e:
+            print(e)
+        lastname = '%'
+        try:
+            lastname = search_key.split(" ")[1] + '%'
+        except Exception as e:
+            print(e)
+
+        query = '''SELECT * FROM user_info, loan_info 
+                    WHERE user_info.user_id=loan_info.user_id 
+                    AND first_name LIKE %s AND last_name LIKE %s;'''
+        cursor.execute(query, (firstname, lastname))
+        res = cursor.fetchall()
+        if res:
+            return jsonify({"data": res})
+        else:
+            return jsonify({"data": "null"})
+    # elif search_type == 'ID':
+    # elif search_type == 'Loan Amount':
+    # elif search_type == 'Loan Paid':
+    # elif search_type == 'Loan Remaining':
+    # pass
+
+
 if __name__ == '__main__':
     app.run(debug=True)
 

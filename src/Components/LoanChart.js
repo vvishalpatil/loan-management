@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Doughnut } from "react-chartjs-2";
+import CurrencyFormat from "react-currency-format";
 
 export default class LoanChart extends Component {
   constructor(props) {
@@ -62,7 +63,13 @@ export default class LoanChart extends Component {
           <hr />
           <div className="card-text text-center mt-3 h6 ">
             {" "}
-            Loan Amount : Rs. {this.state.total}.
+            Loan Amount :{" "}
+            <CurrencyFormat
+              value={this.state.total}
+              displayType={"text"}
+              thousandSeparator={true}
+              prefix={"Rs. "}
+            />
           </div>
         </div>
       </div>

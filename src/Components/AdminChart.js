@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Doughnut } from "react-chartjs-2";
+import CurrencyFormat from "react-currency-format";
 
 export default class AdminChart extends Component {
   constructor(props) {
@@ -7,7 +8,7 @@ export default class AdminChart extends Component {
     const { total_recovered, total_distributed, tenure } = this.props.loan;
     this.state = {
       total: total_recovered + total_distributed,
-      tenure:tenure,
+      tenure: tenure,
       chartData: {
         labels: ["Remaining", "Recovered"],
         datasets: [
@@ -21,7 +22,7 @@ export default class AdminChart extends Component {
         ],
       },
       options: {
-        cutoutPercentage: 60,
+        cutoutPercentage: 0,
         responsive: true,
         animation: {
           animateRotate: true,
@@ -56,13 +57,19 @@ export default class AdminChart extends Component {
           <Doughnut
             data={this.state.chartData}
             options={this.state.options}
-            height={30}
+            height={35}
             width={40}
           />
           <hr />
           <div className="card-text text-center mt-3 h6 ">
             {" "}
-            Total Loan Distributed : Rs. {this.state.total}.
+            Loan Distributed :{" "}
+            <CurrencyFormat
+              value={this.state.total}
+              displayType={"text"}
+              thousandSeparator={true}
+              prefix={"Rs. "}
+            />
           </div>
           <div className="card-text text-center mt-4 h6 ">
             {" "}
@@ -73,6 +80,3 @@ export default class AdminChart extends Component {
     );
   }
 }
-
-
-
