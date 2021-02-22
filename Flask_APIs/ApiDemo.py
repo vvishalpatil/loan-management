@@ -26,10 +26,10 @@ def index():
 # api to pay and make information changes according to payment in database
 @app.route('/payLoan/', methods=['GET'])
 def pay_loan():
-    uid=request.args.get('uid')
-    lid=request.args.get('lid')
-    amount=request.args.get('amount')
-    print(uid,lid,amount)
+    uid = request.args.get('uid')
+    lid = request.args.get('lid')
+    amount = request.args.get('amount')
+    print(uid, lid, amount)
     cur = mysql.connection.cursor()
 
     # to get remaining loan of perticular user
