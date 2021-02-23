@@ -128,7 +128,7 @@ const Details = (props) => {
                   className="card-header h6 rounded text-white"
                   style={{ backgroundColor: "#76b900" }}
                 >
-                  Tenure (in Years.)
+                  Tenure (in months.)
                 </div>
                 <hr></hr>
                 <div className="text-center  font-italic">
@@ -153,7 +153,7 @@ const Details = (props) => {
                 >
                   Transaction History
                 </div>
-                <table className="table table-responsive ">
+                <table className="table table-responsive-sm">
                   <thead>
                     <tr>
                       <th scope="col">Id</th>
@@ -165,7 +165,7 @@ const Details = (props) => {
                     {transaction_history
                       ? transaction_history.map((res, index) => (
                           <tr key={index}>
-                            <th scope="row">{res.tid}</th>
+                            <td>{res.tid}</td>
                             <td>Rs.{res.paid_amount} </td>
                             <td>{res.date.slice(4, 16)}</td>
                           </tr>
