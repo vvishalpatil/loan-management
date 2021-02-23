@@ -41,6 +41,15 @@ export default class TenureChart extends Component {
     };
   }
 
+  // calculatePeriod = () => {
+  //   let years = parseInt(this.state.total / 12);
+  //   let months = this.state.total % 12;
+  //   return (
+  //     <span>{years} yrs {months} months.</span>
+  //   )
+
+  // }
+
   render() {
     return (
       <div className="card rounded shadow animate__animated animate__pulse">
@@ -61,7 +70,7 @@ export default class TenureChart extends Component {
           <hr />
           <div className="card-text text-center mt-3 h6 ">
             {" "}
-            Period (in years) : {this.state.total}
+            Period : {this.state.total}
           </div>
         </div>
       </div>

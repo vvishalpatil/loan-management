@@ -20,8 +20,9 @@ const AdminDash = () => {
   const [modalData, setModalData] = useState(null);
   const [searchType, setSearchType] = useState(null);
   const [searchData, setSearchData] = useState(null);
-  const [tableData, setTableData] = useState(false);
-  const [searchStatus, setSearchStatus] = useState(false);
+  let [tableData, setTableData] = useState(null);
+  const [searchStatus, setSearchStatus] = useState(true);
+  const [comparator, setComparator] = useState(null);
 
   useEffect(() => {
     const getAllUsers = async () => {
@@ -47,8 +48,7 @@ const AdminDash = () => {
         <tr key={index}>
           <td className="text-justify">{user_id}</td>
           <td className="text-justify">
-            {first_name}
-            {last_name}
+            {first_name} {last_name}
           </td>
           <td className="text-justify">
             Rs. {parseInt(remaining_loan) + parseInt(paid_loan)}
@@ -183,24 +183,107 @@ const AdminDash = () => {
   };
 
   const handleSearch = async () => {
-    try {
-      const params = { search_type: searchType, search_key: searchData };
-      const res = await axios.get("/filterSearch/", { params: params });
-      console.log(res.data);
-      if (res.data.data != "null") {
-        setTableData(res.data.data);
-      } else {
-        setSearchStatus(true);
-      }
-    } catch (err) {
-      console.log(err);
+    switch (searchType) {
+      case "ID":
+        tableData = tableData.filter((data) => data.user_id == searchData);
+        if (tableData.length != 0) {
+          setTableData(tableData);
+        } else {
+          setSearchStatus(false);
+        }
+        break;
+
+      case "Name":
+        try {
+          const params = { search_type: searchType, search_key: searchData };
+          const res = await axios.get("/filterSearch/", { params: params });
+          console.log(res.data);
+          if (res.data.data != "null") {
+            setTableData(res.data.data);
+          } else {
+            setSearchStatus(false);
+          }
+        } catch (err) {
+          console.log(err);
+        }
+        break;
+
+      case "Loan Amount":
+        switch (comparator) {
+          case "<":
+            tableData = tableData.filter(
+              (data) => Number(data.total_loan) < Number(searchData)
+            );
+            if (tableData.length != 0) {
+              setTableData(tableData);
+            } else {
+              setSearchStatus(false);
+            }
+            break;
+
+          case ">":
+            tableData = tableData.filter(
+              (data) => Number(data.total_loan) > Number(searchData)
+            );
+            if (tableData.length != 0) {
+              setTableData(tableData);
+            } else {
+              setSearchStatus(false);
+            }
+            break;
+          case "=":
+            tableData = tableData.filter(
+              (data) => Number(data.total_loan) == Number(searchData)
+            );
+            if (tableData.length != 0) {
+              setTableData(tableData);
+            } else {
+              setSearchStatus(false);
+            }
+            break;
+        }
+
+      case "Loan Paid":
+        switch (comparator) {
+          case "<":
+            tableData = tableData.filter(
+              (data) => Number(data.paid_loan) < Number(searchData)
+            );
+            if (tableData.length != 0) {
+              setTableData(tableData);
+            } else {
+              setSearchStatus(false);
+            }
+            break;
+
+          case ">":
+            tableData = tableData.filter(
+              (data) => Number(data.paid_loan) > Number(searchData)
+            );
+            if (tableData.length != 0) {
+              setTableData(tableData);
+            } else {
+              setSearchStatus(false);
+            }
+            break;
+          case "=":
+            tableData = tableData.filter(
+              (data) => Number(data.paid_loan) == Number(searchData)
+            );
+            if (tableData.length != 0) {
+              setTableData(tableData);
+            } else {
+              setSearchStatus(false);
+            }
+            break;
+        }
     }
   };
 
   const handleSearchClear = () => {
-    setTableData(userList)
-    setSearchStatus(false)
-  }
+    setTableData(userList);
+    setSearchStatus(true);
+  };
 
   if (status) {
     return (
@@ -232,8 +315,25 @@ const AdminDash = () => {
                       <option>Tenure completed</option>
                     </select>
                   </div>
+                  {searchType === "Name" ||
+                  searchType === "ID" ||
+                  searchType === null ? null : (
+                    <div className="form-group">
+                      <select
+                        onChange={(e) => setComparator(e.target.value)}
+                        className="form-control w-100 mx-2"
+                        id="sel1"
+                        name="search_type"
+                      >
+                        <option defaultValue></option>
+                        <option> &gt; </option>
+                        <option> &lt; </option>
+                        <option> = </option>
+                      </select>
+                    </div>
+                  )}
                   <input
-                    className="form-control mx-3 w-50"
+                    className="form-control mx-2 w-25"
                     onChange={(e) => setSearchData(e.target.value)}
                     type="text"
                     name="search_key"
@@ -248,7 +348,7 @@ const AdminDash = () => {
                   </button>
                   <button
                     onClick={() => handleSearchClear()}
-                    class="btn btn-success mx-2"
+                    className="btn btn-success mx-2"
                   >
                     Clear
                   </button>
@@ -270,12 +370,13 @@ const AdminDash = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {!searchStatus ? (
+                    {searchStatus ? (
                       tableData.map(createTable)
                     ) : (
                       <tr>
-                 
-                        <td colSpan="6" className="text-info h5">No Records found</td>
+                        <td colSpan="6" className="text-info h5">
+                          No Records found
+                        </td>
                       </tr>
                     )}
                   </tbody>
