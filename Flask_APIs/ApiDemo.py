@@ -89,8 +89,8 @@ def pay_loan():
             WHERE user_id=%s and loan_id=%s
     '''
     query3 = '''
-        INSERT into transaction_info (user_id,loan_id, note, paid_amount) 
-        VALUES(%s,%s,"installment money " , %s)
+        INSERT into transaction_info (user_id,loan_id, note, paid_amount,status) 
+        VALUES(%s,%s,"installment money " , %s,%s)
 
         '''
     query4 = '''
@@ -103,6 +103,31 @@ def pay_loan():
     cur.execute(query1, (str(uid), str(lid)))
     res1 = cur.fetchone()
     new_paid_loan = int(res1['paid_loan']) + int(amount)  # adding payment amount to paid loan amount
+    #to set transaction status
+    due_date = date.datetime.strptime(res1['installment_due_date'], '%Y-%m-%d')
+    today = date.datetime.now()
+    print('------------------------------------------------------')
+    print(today,'day',today.day,'month',today.month,'year',today.year)
+    print(due_date,'installment due date ',due_date.day,type(due_date))
+    if today.year <= due_date.year:
+
+        if today.month < due_date.month:
+            transaction_status = 'green'
+
+        elif today.month == due_date.month:
+            if today.day <= 15:
+                transaction_status = 'green'
+            elif today.day <= due_date.day:
+                transaction_status = 'yellow'
+            else:
+                transaction_status = 'red'
+
+        else:
+            transaction_status = 'red'
+
+    else:
+        transaction_status = 'red'
+
     # code to calculate next installment date
     db_date = res1['installment_due_date']
     date_time_obj = date.datetime.strptime(db_date, '%Y-%m-%d')
@@ -125,7 +150,7 @@ def pay_loan():
     cur.execute(query2, (new_paid_loan, new_due_date, uid, lid))
     # to update transaction information into transaction table
 
-    cur.execute(query3, (str(uid), str(lid), str(amount)))
+    cur.execute(query3, (str(uid), str(lid), str(amount),transaction_status))
     mysql.connection.commit()
 
     return jsonify({'data': [uid, lid, amount], 'msg': msg})
@@ -184,7 +209,7 @@ def get_user_loan_details():
     print(loan_type)
     try:
         last_three_transaction = '''
-              select tid,note,paid_amount ,date
+              select tid,note,paid_amount ,date ,status
               from transaction_info,loan_info 
               where loan_info.user_id=%s and loan_info.loan_type=%s and loan_info.loan_id=transaction_info.loan_id 
               order by tid desc limit 3
@@ -249,6 +274,8 @@ def update_user_profile(uid):
 def filter_search():
     search_type = request.args.get("search_type")
     search_key = request.args.get("search_key")
+    comparator = request.args.get('comparator')
+    print(search_type, search_key, comparator, ' from search')
     cursor = mysql.connection.cursor()
     if search_type == "Name":
         firstname = search_key
@@ -267,15 +294,87 @@ def filter_search():
                     AND first_name LIKE %s AND last_name LIKE %s;'''
         cursor.execute(query, (firstname, lastname))
         res = cursor.fetchall()
-        if res:
-            return jsonify({"data": res})
-        else:
-            return jsonify({"data": "null"})
-    # elif search_type == 'ID':
-    # elif search_type == 'Loan Amount':
-    # elif search_type == 'Loan Paid':
-    # elif search_type == 'Loan Remaining':
-    # pass
+
+    elif search_type == 'User Id':
+
+        query = '''SELECT * FROM user_info, loan_info 
+                       WHERE user_info.user_id= %s and user_info.user_id=loan_info.user_id  '''
+        print(query)
+        print(comparator, search_key)
+        cursor.execute(query,search_key)
+        res = cursor.fetchall()
+    elif search_type == 'Date Issued':
+
+        query = '''SELECT * FROM user_info, loan_info 
+                    WHERE user_info.user_id=loan_info.user_id AND DATE(issue_date)   ''' + comparator +' \'' + search_key +'\''
+        print(query)
+        print(comparator,search_key)
+        cursor.execute(query)
+        res = cursor.fetchall()
+
+    elif search_type == 'Date Issued (Range)':
+        search_key = '\''+search_key+'\''
+        search_key1= '\''+request.args.get('search_key1')+'\''
+        print(search_key,' range part' ,search_key1)
+        query = '''SELECT * FROM user_info, loan_info 
+                       WHERE user_info.user_id=loan_info.user_id AND DATE(issue_date) BETWEEN ''' + search_key + ' AND ' + search_key1
+        print(query)
+        print(comparator, search_key)
+        cursor.execute(query)
+        res = cursor.fetchall()
+
+    elif search_type == 'Tenure':
+        tenure = search_key
+        query = '''SELECT * FROM user_info, loan_info 
+                            WHERE user_info.user_id=loan_info.user_id 
+                            AND loan_tenure '''+ comparator +' ' + tenure
+        cursor.execute(query)
+        res = cursor.fetchall()
+
+    elif search_type == 'Tenure remaining':
+        tenure_remaining = search_key
+        query = '''SELECT * FROM user_info, loan_info 
+                               WHERE user_info.user_id=loan_info.user_id 
+                               AND ( loan_tenure - tenure_completed ) ''' + comparator + ' ' + tenure_remaining
+        cursor.execute(query)
+        res = cursor.fetchall()
+
+    elif search_type == 'Tenure completed':
+        tenure_completed = search_key
+        query = '''SELECT * FROM user_info, loan_info 
+                               WHERE user_info.user_id=loan_info.user_id 
+                               AND tenure_completed ''' + comparator + ' ' + tenure_completed
+        cursor.execute(query)
+        res = cursor.fetchall()
+
+    elif search_type == 'Loan Amount':
+        query = '''SELECT * FROM user_info, loan_info 
+                               WHERE user_info.user_id=loan_info.user_id 
+                               AND total_loan ''' + comparator + ' ' + search_key
+        cursor.execute(query)
+        res = cursor.fetchall()
+
+    elif search_type == 'Loan Paid':
+        query = '''SELECT * FROM user_info, loan_info 
+                                  WHERE user_info.user_id=loan_info.user_id 
+                                  AND paid_loan ''' + comparator + ' ' + search_key
+        cursor.execute(query)
+        res = cursor.fetchall()
+
+    elif search_type == 'Loan Remaining':
+        query = '''SELECT * FROM user_info, loan_info 
+                                  WHERE user_info.user_id=loan_info.user_id 
+                                  AND (total_loan - paid_loan ) ''' + comparator + ' ' + search_key
+        cursor.execute(query)
+        res = cursor.fetchall()
+
+
+    if res:
+        return jsonify({"data": res})
+    else:
+        return jsonify({"data": "null"})
+
+
 
 
 if __name__ == '__main__':

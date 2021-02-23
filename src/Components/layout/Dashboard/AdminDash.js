@@ -20,9 +20,11 @@ const AdminDash = () => {
   const [modalData, setModalData] = useState(null);
   const [searchType, setSearchType] = useState(null);
   const [searchData, setSearchData] = useState(null);
+  const [searchData1,setSearchData1] = useState(null);
   let [tableData, setTableData] = useState(null);
   const [searchStatus, setSearchStatus] = useState(true);
-  const [comparator, setComparator] = useState(null);
+  const [comparator, setComparator] = useState('='); 
+  
 
   useEffect(() => {
     const getAllUsers = async () => {
@@ -92,6 +94,7 @@ const AdminDash = () => {
         mobile,
         loan_type,
         issue_date,
+        loan_id
       } = modalData;
       const tenure_remaining = loan_tenure - tenure_completed;
       const remaining_loan = total_loan - paid_loan;
@@ -106,7 +109,7 @@ const AdminDash = () => {
       };
 
       return (
-        <div className="modal animate__animated animate__fadeIn" id="user">
+        <div key={loan_id} className="modal animate__animated animate__fadeIn" id="user">
           <div className="modal-dialog modal-lg modal-dialog-centered">
             <div className="modal-content">
               <div
@@ -181,103 +184,21 @@ const AdminDash = () => {
       return null;
     }
   };
-
+  
   const handleSearch = async () => {
-    switch (searchType) {
-      case "ID":
-        tableData = tableData.filter((data) => data.user_id == searchData);
-        if (tableData.length != 0) {
-          setTableData(tableData);
-        } else {
-          setSearchStatus(false);
-        }
-        break;
-
-      case "Name":
-        try {
-          const params = { search_type: searchType, search_key: searchData };
-          const res = await axios.get("/filterSearch/", { params: params });
-          console.log(res.data);
-          if (res.data.data != "null") {
-            setTableData(res.data.data);
-          } else {
-            setSearchStatus(false);
-          }
-        } catch (err) {
-          console.log(err);
-        }
-        break;
-
-      case "Loan Amount":
-        switch (comparator) {
-          case "<":
-            tableData = tableData.filter(
-              (data) => Number(data.total_loan) < Number(searchData)
-            );
-            if (tableData.length != 0) {
-              setTableData(tableData);
-            } else {
-              setSearchStatus(false);
-            }
-            break;
-
-          case ">":
-            tableData = tableData.filter(
-              (data) => Number(data.total_loan) > Number(searchData)
-            );
-            if (tableData.length != 0) {
-              setTableData(tableData);
-            } else {
-              setSearchStatus(false);
-            }
-            break;
-          case "=":
-            tableData = tableData.filter(
-              (data) => Number(data.total_loan) == Number(searchData)
-            );
-            if (tableData.length != 0) {
-              setTableData(tableData);
-            } else {
-              setSearchStatus(false);
-            }
-            break;
-        }
-
-      case "Loan Paid":
-        switch (comparator) {
-          case "<":
-            tableData = tableData.filter(
-              (data) => Number(data.paid_loan) < Number(searchData)
-            );
-            if (tableData.length != 0) {
-              setTableData(tableData);
-            } else {
-              setSearchStatus(false);
-            }
-            break;
-
-          case ">":
-            tableData = tableData.filter(
-              (data) => Number(data.paid_loan) > Number(searchData)
-            );
-            if (tableData.length != 0) {
-              setTableData(tableData);
-            } else {
-              setSearchStatus(false);
-            }
-            break;
-          case "=":
-            tableData = tableData.filter(
-              (data) => Number(data.paid_loan) == Number(searchData)
-            );
-            if (tableData.length != 0) {
-              setTableData(tableData);
-            } else {
-              setSearchStatus(false);
-            }
-            break;
-        }
+    try {
+      const params = { search_type: searchType, search_key: searchData , comparator: comparator ,search_key1:searchData1 };
+      const res = await axios.get("/filterSearch/", { params: params });
+      console.log(res.data);
+      if (res.data.data != "null") {
+        setTableData(res.data.data);
+      } else {
+        setSearchStatus(false);
+      }
+    } catch (err) {
+      console.log(err);
     }
+    
   };
 
   const handleSearchClear = () => {
@@ -305,8 +226,10 @@ const AdminDash = () => {
                       name="search_type"
                     >
                       <option defaultValue>Search By</option>
-                      <option>ID</option>
+                      <option>User Id</option>
                       <option>Name</option>
+                      <option>Date Issued</option>
+                      <option>Date Issued (Range)</option>
                       <option>Loan Amount</option>
                       <option>Loan Paid</option>
                       <option>Loan Remaining</option>
@@ -316,7 +239,8 @@ const AdminDash = () => {
                     </select>
                   </div>
                   {searchType === "Name" ||
-                  searchType === "ID" ||
+                  searchType === "User Id" ||
+                  searchType == 'Date Issued (Range)'||
                   searchType === null ? null : (
                     <div className="form-group">
                       <select
@@ -324,21 +248,44 @@ const AdminDash = () => {
                         className="form-control w-100 mx-2"
                         id="sel1"
                         name="search_type"
-                      >
-                        <option defaultValue></option>
+                      > 
+                        <option defaultValue> = </option>
                         <option> &gt; </option>
                         <option> &lt; </option>
-                        <option> = </option>
+                        
                       </select>
                     </div>
                   )}
-                  <input
+                 {searchType=='Date Issued (Range)'?
+                  ( <React.Fragment>
+                    <label className="pl-3" >From</label>
+                    <input
                     className="form-control mx-2 w-25"
                     onChange={(e) => setSearchData(e.target.value)}
-                    type="text"
+                    type='date'
                     name="search_key"
                     placeholder="Search"
                   />
+                  <label>To</label>
+                  <input
+                  className="form-control mx-2 w-25"
+                  onChange={(e) => setSearchData1(e.target.value)}
+                  type='date'
+                  name="search_key"
+                  placeholder="Search"
+                />
+                  </React.Fragment>
+                  ): <input
+                  className="form-control mx-2 w-25"
+                  onChange={(e) => setSearchData(e.target.value)}
+                  type={searchType=='Date Issued' ?'date':'text'}
+                  name="search_key"
+                  placeholder="Search"
+                />
+
+
+                 }
+                 
                   <button
                     onClick={(e) => handleSearch(e)}
                     className="btn btn-success mx-2"
