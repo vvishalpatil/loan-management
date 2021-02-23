@@ -183,9 +183,10 @@ const AdminDash = () => {
   };
 
   const handleSearch = async () => {
+    tableData = userList;
     switch (searchType) {
       case "ID":
-        tableData = tableData.filter((data) => data.user_id == searchData);
+        tableData = tableData.filter((data) => data.user_id == Number(searchData));
         if (tableData.length != 0) {
           setTableData(tableData);
         } else {
@@ -285,6 +286,11 @@ const AdminDash = () => {
     setSearchStatus(true);
   };
 
+  const handleOnChange = (e) => {
+    setSearchData(e.target.value);
+    console.log(e);
+  }
+
   if (status) {
     return (
       <div>
@@ -334,7 +340,7 @@ const AdminDash = () => {
                   )}
                   <input
                     className="form-control mx-2 w-25"
-                    onChange={(e) => setSearchData(e.target.value)}
+                    onChange={(e) => handleOnChange(e)}
                     type="text"
                     name="search_key"
                     placeholder="Search"
