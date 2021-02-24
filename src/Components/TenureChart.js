@@ -1,12 +1,12 @@
 import React, { Component } from "react";
-import {Doughnut} from "react-chartjs-2";
+import { Doughnut } from "react-chartjs-2";
 
 export default class TenureChart extends Component {
   constructor(props) {
     super(props);
     const { completed, remaining } = this.props.tenure;
     this.state = {
-      total: completed + remaining,
+      totalTenure: completed + remaining,
       chartData: {
         labels: ["Remaining", "Completed"],
         datasets: [
@@ -41,14 +41,30 @@ export default class TenureChart extends Component {
     };
   }
 
-  // calculatePeriod = () => {
-  //   let years = parseInt(this.state.total / 12);
-  //   let months = this.state.total % 12;
-  //   return (
-  //     <span>{years} yrs {months} months.</span>
-  //   )
-
-  // }
+  formatTenure() {
+    let year = parseInt(this.state.totalTenure / 12);
+    let month = this.state.totalTenure % 12;
+    console.log(month, year);
+    if (year < 1) {
+      return <span>{month} months.</span>;
+    } else if (year == 1) {
+      if (month == 0) {
+        return <span>{year} yr.</span>;
+      } else {
+        return (
+          <span>
+            {year} yr {month} months.
+          </span>
+        );
+      }
+    } else {
+      return (
+        <span>
+          {year} yrs {month} months.
+        </span>
+      );
+    }
+  }
 
   render() {
     return (
@@ -70,7 +86,7 @@ export default class TenureChart extends Component {
           <hr />
           <div className="card-text text-center mt-3 h6 ">
             {" "}
-            Period : {this.state.total}
+            Period : {this.formatTenure()}
           </div>
         </div>
       </div>

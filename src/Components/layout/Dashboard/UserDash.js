@@ -15,7 +15,7 @@ const UserDash = () => {
     useEffect(() => {
         const getLoanOptions = async(id) => {
             try{
-                const res = await axios.get(`/getLoanOptions/${id}`);
+                const res = await axios.get(`/getUserLoanOptions/${id}`);
                 setLoanOptions(res.data.loan_options);
                 setLoanType(res.data.loan_options[0]);
             }catch(err){

@@ -11,7 +11,7 @@ const LoanForm = (props) => {
     const [redirect,setRedirect] = useState(false);
     const onSubmit = async (data) => {
         try{
-            const res = await axios.post('/applyForLoan/1',data);
+            const res = await axios.post('/applyForLoan/2',data);
             console.log(data)
             alert(res.data.msg)
             if(res.data.status){

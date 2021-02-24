@@ -10,7 +10,7 @@ export default class AdminChart extends Component {
       total: total_recovered + total_distributed,
       tenure: tenure,
       chartData: {
-        labels: ["Remaining", "Recovered"],
+        labels: ["Loan Remaining", "Loan Recovered"],
         datasets: [
           {
             backgroundColor: ["rgb(59, 120, 156)", "#76b900"],
@@ -43,6 +43,31 @@ export default class AdminChart extends Component {
     };
   }
 
+  formatTenure() {
+    let year = parseInt(this.state.tenure / 12);
+    let month = this.state.tenure % 12;
+    console.log(month, year);
+    if (year < 1) {
+      return <span>{month} months.</span>;
+    } else if (year == 1) {
+      if (month == 0) {
+        return <span>{year} yr.</span>;
+      } else {
+        return (
+          <span>
+            {year} yr {month} months.
+          </span>
+        );
+      }
+    } else {
+      return (
+        <span>
+          {year} yrs {month} months.
+        </span>
+      );
+    }
+  }
+
   render() {
     return (
       <div className="card rounded shadow animate__animated animate__pulse">
@@ -73,7 +98,7 @@ export default class AdminChart extends Component {
           </div>
           <div className="card-text text-center mt-4 h6 ">
             {" "}
-            Estimated Recovery Time : {this.state.tenure} yrs.
+            Estimated Recovery Time : <br/><br/> {this.formatTenure()}
           </div>
         </div>
       </div>

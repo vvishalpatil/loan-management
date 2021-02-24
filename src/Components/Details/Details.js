@@ -17,11 +17,10 @@ const Details = (props) => {
     installment_due_date,
     installment_amt,
   } = props.userDetails;
-  
+
   const tenure_remaining = loan_tenure - tenure_completed;
   const remaining_loan = total_loan - paid_loan;
   const transaction_history = props.transactionHistory;
-
 
   const Pay = () => {
     const {
@@ -67,6 +66,31 @@ const Details = (props) => {
         </div>
       </div>
     );
+  };
+
+  const formatTenure = (tenure) => {
+    let year = parseInt(tenure / 12);
+    let month = tenure % 12;
+    console.log(month, year);
+    if (year < 1) {
+      return <span>{month} months.</span>;
+    } else if (year == 1) {
+      if (month == 0) {
+        return <span>{year} yr.</span>;
+      } else {
+        return (
+          <span>
+            {year} yr {month} months.
+          </span>
+        );
+      }
+    } else {
+      return (
+        <span>
+          {year} yrs {month} months.
+        </span>
+      );
+    }
   };
 
   return (
@@ -128,16 +152,22 @@ const Details = (props) => {
                   className="card-header h6 rounded text-white"
                   style={{ backgroundColor: "#76b900" }}
                 >
-                  Tenure (in months.)
+                  Tenure
                 </div>
                 <hr></hr>
-                <div className="text-center  font-italic">
+                <div className="text-left ml-2  font-italic">
                   <p className="card-text">
                     Total :{" "}
-                    {parseInt(tenure_completed) + parseInt(tenure_remaining)}{" "}
+                    {formatTenure(
+                      parseInt(tenure_completed) + parseInt(tenure_remaining)
+                    )}{" "}
                   </p>
-                  <p className="card-text">Completed : {tenure_completed} </p>
-                  <p className="card-text">Remaining : {tenure_remaining} </p>
+                  <p className="card-text">
+                    Completed : {formatTenure(tenure_completed)}{" "}
+                  </p>
+                  <p className="card-text">
+                    Remaining : {formatTenure(tenure_remaining)}{" "}
+                  </p>
                 </div>
               </div>
             </div>
