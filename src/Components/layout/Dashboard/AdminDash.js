@@ -13,6 +13,7 @@ import {
   faLandmark,
   faMobileAlt,
 } from "@fortawesome/free-solid-svg-icons";
+import TransactioStatusChart from "../../TransactionStatusChart";
 
 const AdminDash = () => {
   const [loanType, setLoanType] = useState(null);
@@ -270,7 +271,29 @@ const AdminDash = () => {
         <div className="container-fluid mt-4">
           <div className="row mt-2 ">
             <div className="col-sm-3 mb-2">
-              <AdminChart loan={loanChart} />
+
+              <ul class="nav nav-tabs " role="tablist">
+                <li class="nav-item">
+                  <a class="nav-link active" data-toggle="pill" href="#home">Home</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" data-toggle="pill" href="#menu1">Menu 1</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" data-toggle="pill" href="#menu2">Menu 2</a>
+                </li>
+              </ul>
+              <div class="tab-content">
+                <div id="home" class=" tab-pane active"><br />
+                  <AdminChart loan={loanChart} />
+                </div>
+                <div id="menu1" class=" tab-pane fade"><br />
+                  <TransactioStatusChart ></TransactioStatusChart>    </div>
+                <div id="menu2" class=" tab-pane fade"><br />
+                  <h3>Menu 2</h3>
+                  <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+                </div>
+              </div>
             </div>
             <div className="col-sm-9 mb-2">
               <div className="row container-fluid">
@@ -285,14 +308,14 @@ const AdminDash = () => {
                     >
                       {loanOptions
                         ? loanOptions.map((option, index) => (
-                            <option
-                              className="h6 text-success"
-                              key={index}
-                              value={option}
-                            >
-                              {option}
-                            </option>
-                          ))
+                          <option
+                            className="h6 text-success"
+                            key={index}
+                            value={option}
+                          >
+                            {option}
+                          </option>
+                        ))
                         : null}
                     </select>
                   </div>
@@ -325,23 +348,23 @@ const AdminDash = () => {
                       </select>
                     </div>
                     {searchType === "Name" ||
-                    searchType === "Search By" ||
-                    searchType === "User Id" ||
-                    searchType == "Date Issued (Range)" ||
-                    searchType === null ? null : (
-                      <div className="form-group">
-                        <select
-                          onChange={(e) => setComparator(e.target.value)}
-                          className="form-control w-100 mx-2"
-                          id="sel1"
-                          name="search_type"
-                        >
-                          <option defaultValue> = </option>
-                          <option> &gt; </option>
-                          <option> &lt; </option>
-                        </select>
-                      </div>
-                    )}
+                      searchType === "Search By" ||
+                      searchType === "User Id" ||
+                      searchType == "Date Issued (Range)" ||
+                      searchType === null ? null : (
+                        <div className="form-group">
+                          <select
+                            onChange={(e) => setComparator(e.target.value)}
+                            className="form-control w-100 mx-2"
+                            id="sel1"
+                            name="search_type"
+                          >
+                            <option defaultValue> = </option>
+                            <option> &gt; </option>
+                            <option> &lt; </option>
+                          </select>
+                        </div>
+                      )}
                     {searchType == "Date Issued (Range)" ? (
                       <React.Fragment>
                         <label className="pl-3">From</label>
@@ -362,15 +385,15 @@ const AdminDash = () => {
                         />
                       </React.Fragment>
                     ) : (
-                      <input
-                        className="form-control mx-2 w-25"
-                        onChange={(e) => setSearchData(e.target.value)}
-                        type={searchType == "Date Issued" ? "date" : "text"}
-                        name="search_key"
-                        value={searchData}
-                        placeholder="Search"
-                      />
-                    )}
+                        <input
+                          className="form-control mx-2 w-25"
+                          onChange={(e) => setSearchData(e.target.value)}
+                          type={searchType == "Date Issued" ? "date" : "text"}
+                          name="search_key"
+                          value={searchData}
+                          placeholder="Search"
+                        />
+                      )}
 
                     <button
                       onClick={(e) => handleSearch(e)}
@@ -406,12 +429,12 @@ const AdminDash = () => {
                       {searchStatus ? (
                         tableData.map(createTable)
                       ) : (
-                        <tr>
-                          <td colSpan="6" className="text-info h5">
-                            No Records found
+                          <tr>
+                            <td colSpan="6" className="text-info h5">
+                              No Records found
                           </td>
-                        </tr>
-                      )}
+                          </tr>
+                        )}
                     </tbody>
                   </table>
                 </div>
