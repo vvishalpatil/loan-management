@@ -16,11 +16,14 @@ const Details = (props) => {
     tenure_completed,
     installment_due_date,
     installment_amt,
+    loan_type
   } = props.userDetails;
 
   const tenure_remaining = loan_tenure - tenure_completed;
   const remaining_loan = total_loan - paid_loan;
   const transaction_history = props.transactionHistory;
+  console.log(typeof(transaction_history));
+
 
   const Pay = () => {
     const {
@@ -71,23 +74,22 @@ const Details = (props) => {
   const formatTenure = (tenure) => {
     let year = parseInt(tenure / 12);
     let month = tenure % 12;
-    console.log(month, year);
     if (year < 1) {
-      return <span>{month} months.</span>;
+      return <span>{month} mths.</span>;
     } else if (year == 1) {
       if (month == 0) {
         return <span>{year} yr.</span>;
       } else {
         return (
           <span>
-            {year} yr {month} months.
+            {year} yr  {month} mths.
           </span>
         );
       }
     } else {
       return (
         <span>
-          {year} yrs {month} months.
+          {year} yrs  {month} mths.
         </span>
       );
     }
@@ -100,7 +102,7 @@ const Details = (props) => {
           className="card-header shadow h5 rounded text-white"
           style={{ backgroundColor: "#e66220" }}
         >
-          Details
+          Details - {loan_type}
         </div>
         <div className="row mt-2">
           <div className="col-sm-6">

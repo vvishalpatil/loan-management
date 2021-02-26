@@ -15,32 +15,54 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 const AdminDash = () => {
-  const [userList, setUserList] = useState(null);
+  const [loanType, setLoanType] = useState(null);
+  const [loanOptions, setLoanOptions] = useState(null);
+  const [loaded, setLoaded] = useState(false);
   const [loanChart, setLoanChart] = useState(null);
+
+  useEffect(() => {
+    const getLoanOptions = async () => {
+      try {
+        const res = await axios.get("/getAppliedLoanOptions");
+        setLoanOptions(res.data.options);
+        setLoanChart(res.data.loan_summary);
+        setLoanType(res.data.options[0]);
+        setLoaded(true);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getLoanOptions();
+  }, []);
+
+  const [userList, setUserList] = useState(null);
+
   const [status, setStatus] = useState(false);
   const [modalData, setModalData] = useState(null);
   const [searchType, setSearchType] = useState("Search By");
   const [searchData, setSearchData] = useState(null);
   const [searchData1, setSearchData1] = useState(null);
-  let [tableData, setTableData] = useState(null);
+  const [tableData, setTableData] = useState(null);
   const [searchStatus, setSearchStatus] = useState(true);
   const [comparator, setComparator] = useState("=");
 
   useEffect(() => {
     const getAllUsers = async () => {
       try {
-        const res = await axios.get("/getUsers");
-        // console.log(res.data)
-        setUserList(res.data.users);
-        setTableData(res.data.users);
-        setLoanChart(res.data.loan_summary);
-        setStatus(true);
+        if (loanType) {
+          const res = await axios.get("/getUsers/", {
+            params: { loantype: loanType },
+          });
+          setUserList(res.data.users);
+          setTableData(res.data.users);
+          setStatus(true);
+        }
       } catch (err) {
         console.log("AdminDash", err);
       }
     };
     getAllUsers();
-  }, []);
+  }, [loanType]);
 
   const createTable = (user, index) => {
     if (user) {
@@ -216,6 +238,7 @@ const AdminDash = () => {
         search_key: searchData,
         comparator: comparator,
         search_key1: searchData1,
+        loantype: loanType,
       };
       const res = await axios.get("/filterSearch/", { params: params });
       console.log(res.data);
@@ -241,7 +264,7 @@ const AdminDash = () => {
     console.log(e);
   };
 
-  if (status) {
+  if (loaded) {
     return (
       <div>
         <div className="container-fluid mt-4">
@@ -250,121 +273,149 @@ const AdminDash = () => {
               <AdminChart loan={loanChart} />
             </div>
             <div className="col-sm-9 mb-2">
-              <div className="container-fluid">
-                {/* <div class="container"> */}
-                <div className="form-inline">
+              <div className="row container-fluid">
+                <div className="col-sm-4">
                   <div className="form-group">
                     <select
-                      onChange={(e) => setSearchType(e.target.value)}
-                      className="form-control w-100"
-                      id="sel1"
-                      value={searchType}
-                      name="search_type"
+                      className="form-control shadow-sm"
+                      onChange={(e) => {
+                        setLoanType(e.target.value);
+                      }}
+                      name="loanType"
                     >
-                      <option>Search By</option>
-                      <option>User Id</option>
-                      <option>Name</option>
-                      <option>Date Issued</option>
-                      <option>Date Issued (Range)</option>
-                      <option>Loan Amount</option>
-                      <option>Loan Paid</option>
-                      <option>Loan Remaining</option>
-                      <option>Tenure</option>
-                      <option>Tenure remaining</option>
-                      <option>Tenure completed</option>
+                      {loanOptions
+                        ? loanOptions.map((option, index) => (
+                            <option
+                              className="h6 text-success"
+                              key={index}
+                              value={option}
+                            >
+                              {option}
+                            </option>
+                          ))
+                        : null}
                     </select>
                   </div>
-                  {searchType === "Name" ||
-                  searchType === "Search By" ||
-                  searchType === "User Id" ||
-                  searchType == "Date Issued (Range)" ||
-                  searchType === null ? null : (
+                </div>
+                <div className="col-sm-8"></div>
+              </div>
+              {status ? (
+                <div className="container-fluid mt-3">
+                  {/* <div class="container"> */}
+                  <div className="form-inline">
                     <div className="form-group">
                       <select
-                        onChange={(e) => setComparator(e.target.value)}
-                        className="form-control w-100 mx-2"
+                        onChange={(e) => setSearchType(e.target.value)}
+                        className="form-control w-100"
                         id="sel1"
+                        value={searchType}
                         name="search_type"
                       >
-                        <option defaultValue> = </option>
-                        <option> &gt; </option>
-                        <option> &lt; </option>
+                        <option>Search By</option>
+                        <option>User Id</option>
+                        <option>Name</option>
+                        <option>Date Issued</option>
+                        <option>Date Issued (Range)</option>
+                        <option>Loan Amount</option>
+                        <option>Loan Paid</option>
+                        <option>Loan Remaining</option>
+                        <option>Tenure</option>
+                        <option>Tenure remaining</option>
+                        <option>Tenure completed</option>
                       </select>
                     </div>
-                  )}
-                  {searchType == "Date Issued (Range)" ? (
-                    <React.Fragment>
-                      <label className="pl-3">From</label>
+                    {searchType === "Name" ||
+                    searchType === "Search By" ||
+                    searchType === "User Id" ||
+                    searchType == "Date Issued (Range)" ||
+                    searchType === null ? null : (
+                      <div className="form-group">
+                        <select
+                          onChange={(e) => setComparator(e.target.value)}
+                          className="form-control w-100 mx-2"
+                          id="sel1"
+                          name="search_type"
+                        >
+                          <option defaultValue> = </option>
+                          <option> &gt; </option>
+                          <option> &lt; </option>
+                        </select>
+                      </div>
+                    )}
+                    {searchType == "Date Issued (Range)" ? (
+                      <React.Fragment>
+                        <label className="pl-3">From</label>
+                        <input
+                          className="form-control mx-2 w-25"
+                          onChange={(e) => setSearchData(e.target.value)}
+                          type="date"
+                          name="search_key"
+                          placeholder="Search"
+                        />
+                        <label>To</label>
+                        <input
+                          className="form-control mx-2 w-25"
+                          onChange={(e) => setSearchData1(e.target.value)}
+                          type="date"
+                          name="search_key"
+                          placeholder="Search"
+                        />
+                      </React.Fragment>
+                    ) : (
                       <input
                         className="form-control mx-2 w-25"
                         onChange={(e) => setSearchData(e.target.value)}
-                        type="date"
+                        type={searchType == "Date Issued" ? "date" : "text"}
                         name="search_key"
+                        value={searchData}
                         placeholder="Search"
                       />
-                      <label>To</label>
-                      <input
-                        className="form-control mx-2 w-25"
-                        onChange={(e) => setSearchData1(e.target.value)}
-                        type="date"
-                        name="search_key"
-                        placeholder="Search"
-                      />
-                    </React.Fragment>
-                  ) : (
-                    <input
-                      className="form-control mx-2 w-25"
-                      onChange={(e) => setSearchData(e.target.value)}
-                      type={searchType == "Date Issued" ? "date" : "text"}
-                      name="search_key"
-                      value={searchData}
-                      placeholder="Search"
-                    />
-                  )}
-
-                  <button
-                    onClick={(e) => handleSearch(e)}
-                    className="btn btn-success mx-2"
-                    type="submit"
-                  >
-                    Search
-                  </button>
-                  <button
-                    onClick={() => handleSearchClear()}
-                    className="btn btn-success mx-2"
-                  >
-                    Clear
-                  </button>
-                  <br />
-                </div>
-                {/* </div> */}
-                <table className="table mt-2 shadow table-striped table-responsive-sm bg-light animate__animated animate__fadeIn">
-                  <thead
-                    className="text-left text-light"
-                    style={{ backgroundColor: "#5161ce" }}
-                  >
-                    <tr>
-                      <th className="h6">ID</th>
-                      <th className="h6">Name</th>
-                      <th className="h6">Loan Amount</th>
-                      <th className="h6">Loan Paid</th>
-                      <th className="h6">Loan Remaining</th>
-                      <th className="h6 text-center">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {searchStatus ? (
-                      tableData.map(createTable)
-                    ) : (
-                      <tr>
-                        <td colSpan="6" className="text-info h5">
-                          No Records found
-                        </td>
-                      </tr>
                     )}
-                  </tbody>
-                </table>
-              </div>
+
+                    <button
+                      onClick={(e) => handleSearch(e)}
+                      className="btn btn-success mx-2"
+                      type="submit"
+                    >
+                      Search
+                    </button>
+                    <button
+                      onClick={() => handleSearchClear()}
+                      className="btn btn-success mx-2"
+                    >
+                      Clear
+                    </button>
+                    <br />
+                  </div>
+                  {/* </div> */}
+                  <table className="table mt-3 shadow table-striped table-responsive-sm bg-light animate__animated animate__fadeIn">
+                    <thead
+                      className="text-left text-light"
+                      style={{ backgroundColor: "#5161ce" }}
+                    >
+                      <tr>
+                        <th className="h6">ID</th>
+                        <th className="h6">Name</th>
+                        <th className="h6">Loan Amount</th>
+                        <th className="h6">Loan Paid</th>
+                        <th className="h6">Loan Remaining</th>
+                        <th className="h6 text-center">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {searchStatus ? (
+                        tableData.map(createTable)
+                      ) : (
+                        <tr>
+                          <td colSpan="6" className="text-info h5">
+                            No Records found
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              ) : null}
             </div>
           </div>
         </div>
@@ -372,7 +423,6 @@ const AdminDash = () => {
       </div>
     );
   } else {
-    console.log("else", "loading");
     return <Spinner />;
   }
 };

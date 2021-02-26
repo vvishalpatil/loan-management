@@ -44,23 +44,22 @@ export default class TenureChart extends Component {
   formatTenure() {
     let year = parseInt(this.state.totalTenure / 12);
     let month = this.state.totalTenure % 12;
-    console.log(month, year);
     if (year < 1) {
-      return <span>{month} months.</span>;
+      return <span>{month} mths.</span>;
     } else if (year == 1) {
       if (month == 0) {
         return <span>{year} yr.</span>;
       } else {
         return (
           <span>
-            {year} yr {month} months.
+            {year} yr {month} mths.
           </span>
         );
       }
     } else {
       return (
         <span>
-          {year} yrs {month} months.
+          {year} yrs {month} mths.
         </span>
       );
     }
@@ -80,7 +79,7 @@ export default class TenureChart extends Component {
           <Doughnut
             data={this.state.chartData}
             options={this.state.options}
-            height={40}
+            height={43}
             width={50}
           />
           <hr />

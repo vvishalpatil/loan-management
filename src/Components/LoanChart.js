@@ -57,7 +57,7 @@ export default class LoanChart extends Component {
           <Doughnut
             data={this.state.chartData}
             options={this.state.options}
-            height={40}
+            height={43}
             width={50}
           />
           <hr />

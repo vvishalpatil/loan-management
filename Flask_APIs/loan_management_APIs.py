@@ -23,6 +23,166 @@ def index():
     return jsonify({"users": res})
 
 
+# ----------------------------------------------------Admin Dashboard APIs----------------------------------------------
+
+# API to get the different types of loan applied
+@app.route('/getAppliedLoanOptions', methods=['GET'])
+def get_applied_loan_options():
+    cursor = mysql.connection.cursor()
+    query1 = '''SELECT DISTINCT(loan_type) FROM loan_info'''
+    query2 = '''
+           SELECT sum(paid_loan) as total_recovered , SUM(total_loan) as total_distributed, 
+           MAX(loan_tenure - tenure_completed) as tenure
+           FROM loan_info;'''
+    cursor.execute(query1)
+    result = cursor.fetchall()
+    cursor.execute(query2)
+    result2 = cursor.fetchone()
+    if result and result2:
+        loan_options = []
+        for option in result:
+            loan_options.append(option['loan_type'])
+        return jsonify({'status': 'success', 'options': loan_options, "loan_summary": result2})
+    else:
+        return jsonify({'options': "no data"})
+
+
+# API for List of all user based on the selected loan type
+@app.route('/getUsers/', methods=['GET'])
+def get_users():
+    option = request.args.get('loantype')
+    cur = mysql.connection.cursor()
+
+    # to get all user information with the associated loan type
+    try:
+        cur.execute('''SELECT * FROM user_info, loan_info 
+                        WHERE user_info.user_id = loan_info.user_id AND loan_type = %s;''', [option])
+        res1 = cur.fetchall()
+        if res1:
+            return jsonify({"status": "success", "users": res1})
+        else:
+            return jsonify({"status": "failed", "users": res1})
+    except Exception as e:
+        print(e)
+        return jsonify({"message": "something went wrong"})
+
+
+# API to filter the data in the Admin Dashboard
+@app.route('/filterSearch/', methods=['GET'])
+def filter_search():
+    search_type = request.args.get("search_type")
+    search_key = request.args.get("search_key")
+    comparator = request.args.get('comparator')
+    loan_type = request.args.get('loantype')
+    cursor = mysql.connection.cursor()
+    res = ""
+    try:
+        if search_type == "Name":
+            firstname = search_key
+            try:
+                firstname = search_key.split(" ")[0] + '%'
+            except Exception as e:
+                print(e)
+            lastname = '%'
+            try:
+                lastname = search_key.split(" ")[1] + '%'
+            except Exception as e:
+                print(e)
+
+            query = '''SELECT * FROM user_info, loan_info 
+                        WHERE user_info.user_id=loan_info.user_id 
+                        AND loan_info.loan_type = %s AND first_name LIKE %s AND last_name LIKE %s;'''
+            cursor.execute(query, (loan_type, firstname, lastname))
+            res = cursor.fetchall()
+
+        elif search_type == 'User Id':
+            query = '''SELECT * FROM user_info, loan_info 
+                           WHERE user_info.user_id= %s AND loan_info.loan_type = %s AND user_info.user_id=loan_info.user_id; '''
+            cursor.execute(query, (search_key, loan_type))
+            res = cursor.fetchall()
+            print(res)
+
+        elif search_type == 'Date Issued':
+            query = '''SELECT * FROM user_info, loan_info 
+                        WHERE user_info.user_id=loan_info.user_id AND loan_info.loan_type =  \'''' \
+                    + loan_type + ' \'  AND  DATE(issue_date)' + comparator + ' \'' + search_key + '\''
+
+            print(query)
+            print(comparator, search_key)
+            cursor.execute(query)
+            res = cursor.fetchall()
+
+        elif search_type == 'Date Issued (Range)':
+            search_key = '\'' + search_key + '\''
+            search_key1 = '\'' + request.args.get('search_key1') + '\''
+            print(search_key, ' range part', search_key1)
+            query = '''SELECT * FROM user_info, loan_info 
+                           WHERE user_info.user_id=loan_info.user_id AND loan_info.loan_type =  \'''' \
+                    + loan_type + ' \'  AND DATE(issue_date) BETWEEN ' + search_key + ' AND ' + search_key1
+            print(query)
+            print(comparator, search_key)
+            cursor.execute(query)
+            res = cursor.fetchall()
+
+        elif search_type == 'Tenure':
+            tenure = search_key
+            query = '''SELECT * FROM user_info, loan_info 
+                                WHERE user_info.user_id=loan_info.user_id 
+                                AND loan_info.loan_type =  \'''' + loan_type + ' \' AND loan_tenure ' \
+                    + comparator + ' ' + tenure
+            cursor.execute(query)
+            print(query)
+            res = cursor.fetchall()
+            print(res)
+
+        elif search_type == 'Tenure remaining':
+            tenure_remaining = search_key
+            query = '''SELECT * FROM user_info, loan_info 
+                        WHERE user_info.user_id=loan_info.user_id 
+                        AND loan_info.loan_type =  \'''' + loan_type + ' \' AND ( loan_tenure - tenure_completed ) ' \
+                    + comparator + ' ' + tenure_remaining
+            print(query)
+            cursor.execute(query)
+            res = cursor.fetchall()
+
+        elif search_type == 'Tenure completed':
+            tenure_completed = search_key
+            query = '''SELECT * FROM user_info, loan_info 
+                                   WHERE user_info.user_id=loan_info.user_id AND loan_info.loan_type =  \'''' \
+                    + loan_type + ' \' AND tenure_completed ' + comparator + ' ' + tenure_completed
+            cursor.execute(query)
+            res = cursor.fetchall()
+
+        elif search_type == 'Loan Amount':
+            query = '''SELECT * FROM user_info, loan_info 
+                                   WHERE user_info.user_id=loan_info.user_id  AND loan_info.loan_type =  \'''' \
+                    + loan_type + ' \' AND total_loan ' + comparator + ' ' + search_key
+            cursor.execute(query)
+            res = cursor.fetchall()
+
+        elif search_type == 'Loan Paid':
+            query = '''SELECT * FROM user_info, loan_info 
+                                      WHERE user_info.user_id=loan_info.user_id     AND loan_info.loan_type =  \'''' \
+                    + loan_type + ' \' AND paid_loan ' + comparator + ' ' + search_key
+            cursor.execute(query)
+            res = cursor.fetchall()
+
+        elif search_type == 'Loan Remaining':
+            query = '''SELECT * FROM user_info, loan_info 
+                                      WHERE user_info.user_id=loan_info.user_id  AND loan_info.loan_type =  \'''' \
+                    + loan_type + ' \' AND (total_loan - paid_loan ) ' + comparator + ' ' + search_key
+            cursor.execute(query)
+            res = cursor.fetchall()
+        if res:
+            return jsonify({"data": res})
+        else:
+            return jsonify({"data": "null"})
+    except Exception as e:
+        print(e)
+
+
+# -----------------------------------------------User Dashboard APIs----------------------------------------------------
+
 @app.route('/applyForLoan/<int:uid>', methods=['POST'])
 def apply_for_loan(uid):
     data = request.json
@@ -104,7 +264,7 @@ def pay_loan():
              UPDATE loan_info 
              SET loan_status="closed"
              where user_id = %s and loan_id = %s
-            
+
             '''
 
     cur.execute(query1, (str(uid), str(lid)))
@@ -163,36 +323,13 @@ def pay_loan():
     return jsonify({'data': [uid, lid, amount], 'msg': msg})
 
 
-# all user details api for admin dashboard
-@app.route('/getUsers', methods=['GET'])
-def get_users():
-    cur = mysql.connection.cursor()
-    # to get all user information
-    query1 = "SELECT * FROM user_info, loan_info where user_info.user_id=loan_info.user_id;"
-    # to get total remaining loan amount
-    query2 = '''
-    SELECT sum(paid_loan) as total_recovered , SUM(total_loan) as total_distributed, MAX(loan_tenure - tenure_completed) as tenure
-    from loan_info;'''
-    try:
-        cur.execute(query1)
-        res1 = cur.fetchall()
-        cur.execute(query2)
-        res2 = cur.fetchone()
-        if res1 and res2:
-            return jsonify({"status": "success", "users": res1, 'loan_summary': res2})
-        else:
-            return jsonify({"status": "failed", "users": res1, 'loan_summary': res2})
-    except Exception as e:
-        return jsonify({"message": "something went wrong"})
-
-
 # API to get the applied no of loans of a particular user
 @app.route('/getUserLoanOptions/<int:uid>')
 def get_user_loan_options(uid):
     try:
         cursor = mysql.connection.cursor()
         cursor.execute('''SELECT loan_type from loan_info 
-                                   WHERE user_id = %s;''',
+                                   WHERE user_id = %s; ''',
                        str(uid))
         result = cursor.fetchall()
         if result:
@@ -277,127 +414,5 @@ def update_user_profile(uid):
         return jsonify({"message": "something went wrong"})
 
 
-@app.route('/filterSearch/', methods=['GET'])
-def filter_search():
-    search_type = request.args.get("search_type")
-    search_key = request.args.get("search_key")
-    comparator = request.args.get('comparator')
-    cursor = mysql.connection.cursor()
-    res = ""
-    if search_type == "Name":
-        firstname = search_key
-        try:
-            firstname = search_key.split(" ")[0] + '%'
-        except Exception as e:
-            print(e)
-        lastname = '%'
-        try:
-            lastname = search_key.split(" ")[1] + '%'
-        except Exception as e:
-            print(e)
-
-        query = '''SELECT * FROM user_info, loan_info 
-                    WHERE user_info.user_id=loan_info.user_id 
-                    AND first_name LIKE %s AND last_name LIKE %s;'''
-        cursor.execute(query, (firstname, lastname))
-        res = cursor.fetchall()
-
-    elif search_type == 'User Id':
-
-        query = '''SELECT * FROM user_info, loan_info 
-                       WHERE user_info.user_id= %s and user_info.user_id=loan_info.user_id  '''
-        print(query)
-        cursor.execute(query, search_key)
-        res = cursor.fetchall()
-    elif search_type == 'Date Issued':
-
-        query = '''SELECT * FROM user_info, loan_info 
-                    WHERE user_info.user_id=loan_info.user_id AND DATE(issue_date)   ''' + comparator + ' \'' + search_key + '\''
-        print(query)
-        print(comparator, search_key)
-        cursor.execute(query)
-        res = cursor.fetchall()
-
-    elif search_type == 'Date Issued (Range)':
-        search_key = '\'' + search_key + '\''
-        search_key1 = '\'' + request.args.get('search_key1') + '\''
-        print(search_key, ' range part', search_key1)
-        query = '''SELECT * FROM user_info, loan_info 
-                       WHERE user_info.user_id=loan_info.user_id AND DATE(issue_date) BETWEEN ''' + search_key + ' AND ' + search_key1
-        print(query)
-        print(comparator, search_key)
-        cursor.execute(query)
-        res = cursor.fetchall()
-
-    elif search_type == 'Tenure':
-        tenure = search_key
-        query = '''SELECT * FROM user_info, loan_info 
-                            WHERE user_info.user_id=loan_info.user_id 
-                            AND loan_tenure ''' + comparator + ' ' + tenure
-        cursor.execute(query)
-        print(query)
-        res = cursor.fetchall()
-        print(res)
-
-    elif search_type == 'Tenure remaining':
-        tenure_remaining = search_key
-        query = '''SELECT * FROM user_info, loan_info 
-                    WHERE user_info.user_id=loan_info.user_id 
-                    AND ( loan_tenure - tenure_completed ) ''' + comparator + ' ' + tenure_remaining
-        cursor.execute(query)
-        res = cursor.fetchall()
-
-    elif search_type == 'Tenure completed':
-        tenure_completed = search_key
-        query = '''SELECT * FROM user_info, loan_info 
-                               WHERE user_info.user_id=loan_info.user_id 
-                               AND tenure_completed ''' + comparator + ' ' + tenure_completed
-        cursor.execute(query)
-        res = cursor.fetchall()
-
-    elif search_type == 'Loan Amount':
-        query = '''SELECT * FROM user_info, loan_info 
-                               WHERE user_info.user_id=loan_info.user_id 
-                               AND total_loan ''' + comparator + ' ' + search_key
-        cursor.execute(query)
-        res = cursor.fetchall()
-
-    elif search_type == 'Loan Paid':
-        query = '''SELECT * FROM user_info, loan_info 
-                                  WHERE user_info.user_id=loan_info.user_id 
-                                  AND paid_loan ''' + comparator + ' ' + search_key
-        cursor.execute(query)
-        res = cursor.fetchall()
-
-    elif search_type == 'Loan Remaining':
-        query = '''SELECT * FROM user_info, loan_info 
-                                  WHERE user_info.user_id=loan_info.user_id 
-                                  AND (total_loan - paid_loan ) ''' + comparator + ' ' + search_key
-        cursor.execute(query)
-        res = cursor.fetchall()
-    if res:
-        return jsonify({"data": res})
-    else:
-        return jsonify({"data": "null"})
-
-
-@app.route('/getAppliedLoanOptions', methods=['GET'])
-def get_applied_loan_options():
-    cursor = mysql.connection.cursor()
-    query = '''SELECT DISTINCT(loan_type) FROM loan_info'''
-    cursor.execute(query)
-    result = cursor.fetchall()
-    if result:
-        loan_options = []
-        for option in result:
-            loan_options.append(option['loan_type'])
-        return jsonify({'options': loan_options})
-    else:
-        return jsonify({'options': "no data"})
-
-
 if __name__ == '__main__':
     app.run(debug=True)
-
-# for last three transaction
-# select * from (select * from transaction_info order by tid desc limit 3) as trans_history order by tid

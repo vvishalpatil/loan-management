@@ -4,14 +4,14 @@ import axios from 'axios';
 import TenureChart from '../../TenureChart';
 import Spinner from '../Spinner';
 import Details from '../../Details/Details';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 const UserDash = () => {
 
-  
+    // const {id} = useParams();
     const [loanType, setLoanType] = useState(null);
     const [loanOptions, setLoanOptions] = useState(null);
-
+    
     useEffect(() => {
         const getLoanOptions = async(id) => {
             try{
@@ -22,7 +22,7 @@ const UserDash = () => {
                 console.log(err);
             }
         }
-        getLoanOptions(2);
+        getLoanOptions(Number(2));
     }, []);
 
 
@@ -45,7 +45,7 @@ const UserDash = () => {
                 console.log(err);
             }
         }
-        getLoanDetails(2);
+        getLoanDetails(Number(2));
 
     }, [loanType]);
 

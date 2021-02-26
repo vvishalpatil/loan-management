@@ -48,21 +48,21 @@ export default class AdminChart extends Component {
     let month = this.state.tenure % 12;
     console.log(month, year);
     if (year < 1) {
-      return <span>{month} months.</span>;
+      return <span>{month} mths.</span>;
     } else if (year == 1) {
       if (month == 0) {
         return <span>{year} yr.</span>;
       } else {
         return (
           <span>
-            {year} yr {month} months.
+            {year} yr {month} mths.
           </span>
         );
       }
     } else {
       return (
         <span>
-          {year} yrs {month} months.
+          {year} yrs {month} mths.
         </span>
       );
     }
