@@ -72,7 +72,7 @@ const UserDash = () => {
                                     <Details userDetails = {userDetails} transactionHistory={transactionHistory}/>   
                                 </div>
                                 <div className="col-sm-3"> 
-                                    <TenureChart tenure = {tenure}/>
+                                    <TenureChart tenure = {tenure} />
                                 </div>
                             </div>
                         </div>

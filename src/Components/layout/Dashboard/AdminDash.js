@@ -29,6 +29,8 @@ const AdminDash = () => {
         setLoanChart(res.data.loan_summary);
         setLoanType(res.data.options[0]);
         setLoaded(true);
+ 
+        // console.log(d);
       } catch (err) {
         console.log(err);
       }
@@ -41,7 +43,7 @@ const AdminDash = () => {
   const [status, setStatus] = useState(false);
   const [modalData, setModalData] = useState(null);
   const [searchType, setSearchType] = useState("Search By");
-  const [searchData, setSearchData] = useState(null);
+  const [searchData, setSearchData] = useState('');
   const [searchData1, setSearchData1] = useState(null);
   const [tableData, setTableData] = useState(null);
   const [searchStatus, setSearchStatus] = useState(true);
@@ -272,27 +274,27 @@ const AdminDash = () => {
           <div className="row mt-2 ">
             <div className="col-sm-3 mb-2">
 
-              <ul class="nav nav-tabs " role="tablist">
-                <li class="nav-item">
-                  <a class="nav-link active" data-toggle="pill" href="#home">Home</a>
+              <ul className="nav nav-tabs " role="tablist">
+                <li className="nav-item">
+                  <a className="nav-link active" data-toggle="pill" href="#home">Loan</a>
                 </li>
-                <li class="nav-item">
-                  <a class="nav-link" data-toggle="pill" href="#menu1">Menu 1</a>
+                <li className="nav-item">
+                  <a className="nav-link" data-toggle="pill" href="#menu1">Transaction</a>
                 </li>
-                <li class="nav-item">
+                {/* <li class="nav-item">
                   <a class="nav-link" data-toggle="pill" href="#menu2">Menu 2</a>
-                </li>
+                </li> */}
               </ul>
-              <div class="tab-content">
-                <div id="home" class=" tab-pane active"><br />
+              <div className="tab-content">
+                <div id="home" className=" tab-pane active"><br />
                   <AdminChart loan={loanChart} />
                 </div>
-                <div id="menu1" class=" tab-pane fade"><br />
+                <div id="menu1" className=" tab-pane fade"><br />
                   <TransactioStatusChart ></TransactioStatusChart>    </div>
-                <div id="menu2" class=" tab-pane fade"><br />
+                {/* <div id="menu2" class=" tab-pane fade"><br />
                   <h3>Menu 2</h3>
                   <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
-                </div>
+                </div> */}
               </div>
             </div>
             <div className="col-sm-9 mb-2">

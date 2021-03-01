@@ -16,14 +16,13 @@ const Details = (props) => {
     tenure_completed,
     installment_due_date,
     installment_amt,
-    loan_type
+    loan_type,
   } = props.userDetails;
 
   const tenure_remaining = loan_tenure - tenure_completed;
   const remaining_loan = total_loan - paid_loan;
   const transaction_history = props.transactionHistory;
-  console.log(typeof(transaction_history));
-
+  console.log(typeof transaction_history);
 
   const Pay = () => {
     const {
@@ -82,16 +81,29 @@ const Details = (props) => {
       } else {
         return (
           <span>
-            {year} yr  {month} mths.
+            {year} yr {month} mths.
           </span>
         );
       }
     } else {
       return (
         <span>
-          {year} yrs  {month} mths.
+          {year} yrs {month} mths.
         </span>
       );
+    }
+  };
+
+  const setStatusColor = (status) => {
+    switch (status) {
+      case "green":
+        return "text-success";
+
+      case "yellow":
+        return "text-warning";
+
+      case "red":
+        return "text-danger";
     }
   };
 
@@ -197,7 +209,12 @@ const Details = (props) => {
                     {transaction_history
                       ? transaction_history.map((res, index) => (
                           <tr key={index}>
-                            <td>{res.tid}</td>
+                            <td>
+                              <span className={setStatusColor(res.status)}>
+                                &#9679;
+                              </span>
+                              {res.tid}{" "}
+                            </td>
                             <td>Rs.{res.paid_amount} </td>
                             <td>{res.date.slice(4, 16)}</td>
                           </tr>

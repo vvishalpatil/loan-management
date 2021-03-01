@@ -67,34 +67,31 @@ def get_users():
         return jsonify({"message": "something went wrong"})
 
 
-@app.route('/getTransactionStatus/',methods=['GET'])
+@app.route('/getTransactionStatus/', methods=['GET'])
 def get_transaction_status():
-    value=request.args.get('data')
-    print(value,'params from client')
+    value = request.args.get('data')
+    print(value, 'params from client')
     year = value.split('-')[0]
     month = value.split('-')[1]
-    print('year',year,'monht',month)
+    print('year', year, 'monht', month)
     cursor = mysql.connection.cursor()
     query1 = '''SELECT count(*) as count FROM transaction_info
                         WHERE YEAR(date) = %s AND MONTH(date) = %s and status = %s'''
-
-
-
-
-    res=[0,0,0]
-    cursor.execute(query1,(year,month,'green'))
-    res[0]=cursor.fetchone()['count']
-    cursor.execute(query1, (year, month,'yellow'))
+    res = [0, 0, 0]
+    cursor.execute(query1, (year, month, 'green'))
+    res[0] = cursor.fetchone()['count']
+    cursor.execute(query1, (year, month, 'yellow'))
     res[1] = cursor.fetchone()['count']
-    cursor.execute(query1, (year, month,'red'))
+    cursor.execute(query1, (year, month, 'red'))
     res[2] = cursor.fetchone()['count']
 
     print(res)
 
     if res:
-        return jsonify({"data": res,'range':max(res)})
+        return jsonify({"data": res, 'range': max(res)})
     else:
-        return jsonify({"data": "null",'range':10})
+        return jsonify({"data": "null", 'range': 10})
+
 
 # API to filter the data in the Admin Dashboard
 @app.route('/filterSearch/', methods=['GET'])

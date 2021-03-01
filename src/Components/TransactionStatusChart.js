@@ -7,7 +7,7 @@ import { data } from "jquery";
 export default class TransactioStatusChart extends Component {
   constructor(props) {
     super(props);
-    console.log('rendered')
+    console.log("rendered");
     this.state = {
       display: false,
 
@@ -29,10 +29,10 @@ export default class TransactioStatusChart extends Component {
             {
               ticks: {
                 min: 0,
-                max: 100
-              }
-            }
-          ]
+                max: 100,
+              },
+            },
+          ],
         },
 
         responsive: true,
@@ -55,8 +55,10 @@ export default class TransactioStatusChart extends Component {
     };
   }
   fetchData = async (yearAndMonth) => {
-    const res = await axios.get('/getTransactionStatus/', { params: { data: yearAndMonth } })
-    console.log(res.data, 'fetchdata')
+    const res = await axios.get("/getTransactionStatus/", {
+      params: { data: yearAndMonth },
+    });
+    console.log(res.data.data, "fetchdata");
 
     this.setState({
       display: true,
@@ -64,22 +66,24 @@ export default class TransactioStatusChart extends Component {
         labels: ["Green", "Yellow", "Red"],
         datasets: [
           {
-            backgroundColor: ["green", "yellow", "red"],
+            backgroundColor: ["#76b900", "#FFD300", "#FF0000"],
             borderColor: "white",
             data: res.data.data,
           },
         ],
-      }
-      ,options: {
+      },
+      options: {
         scales: {
           yAxes: [
             {
               ticks: {
                 min: 0,
-                max: res.data.range
-              }
-            }
-          ]
+                max: res.data.range + 1,
+                fontColor: "slateblue",
+                // lineHeight: 2.3
+              },
+            },
+          ],
         },
 
         responsive: true,
@@ -98,23 +102,26 @@ export default class TransactioStatusChart extends Component {
         layout: {
           padding: 1,
         },
-      }
-  })
+      },
+    });
 
-    console.log(this.state,'state in fetch data')
-  }
+    console.log(this.state, "state in fetch data");
+  };
   componentDidMount() {
-    const res = this.fetchData('2021-02')
-    console.log(res.data, 'component did mount')
+    let d = new Date()
+    let dateStr = `${d.getFullYear()}-${d.getMonth() + 1}`;
+    console.log(d.getMonth(),"month");
+    this.fetchData(dateStr);
   }
   handleChange(e) {
-    console.log(e.target.value)
-    console.log(this.state,'onchange')
-    this.fetchData(e.target.value)
+    console.log(e.target.value,"onchange");
+    
+    this.fetchData(e.target.value);
   }
 
-
   render() {
+    let d = new Date()
+    let dateStr = `${d.getFullYear()}-${d.getMonth() + 1}`;
     if (this.state.display) {
       return (
         <div className="card rounded shadow animate__animated animate__pulse ">
@@ -124,18 +131,26 @@ export default class TransactioStatusChart extends Component {
               style={{ backgroundColor: "#5161ce" }}
             >
               Monthly Transaction Status
-          </div>
+            </div>
 
-            <hr className="w-75 mb-4" style={{ borderTop: "2px solid #5161ce" }} />
+            <hr
+              className="w-75 mb-4"
+              style={{ borderTop: "2px solid #5161ce" }}
+            />
             <div>
               <form>
-                <div class="form-group">
-                  <input type="month" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" onChange={(e) => { this.handleChange(e) }} />
+                <div className="form-group">
+                  <input
+                    type="month"
+                    className="form-control"
+                    id="exampleInputEmail1"
+                    aria-describedby="emailHelp"
+                    onChange={(e) => {
+                      this.handleChange(e);
+                    }}
+                  />
                 </div>
-
-
               </form>
-
             </div>
             <Bar
               data={this.state.chartData}
@@ -143,12 +158,18 @@ export default class TransactioStatusChart extends Component {
               height={35}
               width={40}
             />
-
+            <div className="text-left ">
+              <p className="text-center mt-2 shadow-sm card-header">Color indicates payment status</p>
+              <br/>
+              <p className="card-text"><span className="text-success h5">&#9679;</span> before 15th day.</p>
+              <p className="card-text "><span className="text-warning h5">&#9679;</span> between 15th and due date.</p>
+              <p className="card-text"><span className="text-danger h5">&#9679;</span> past the due date.</p>
+            </div>
           </div>
         </div>
       );
     } else {
-      return ('loading')
+      return "loading";
     }
   }
 }
