@@ -9,7 +9,7 @@ const UpdateProfile = (props) => {
 
     const onSubmit = async (data) => {
         try{
-            const res = await axios.put(`/updateUserProfile/${2}`,data);
+            const res = await axios.put(`/updateUserProfile/${localStorage.userId}`,data);
             alert(res.data.message);
         }catch(err){
             alert(err);

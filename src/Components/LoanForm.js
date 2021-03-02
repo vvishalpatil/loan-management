@@ -6,12 +6,12 @@ import { useState } from 'react/cjs/react.development';
 import { Redirect } from 'react-router-dom';
 
 const LoanForm = (props) => {
-
     const {register, handleSubmit} = useForm();
     const [redirect,setRedirect] = useState(false);
     const onSubmit = async (data) => {
         try{
-            const res = await axios.post('/applyForLoan/2',data);
+            data.tenure = Number(data.tenure) * 12;
+            const res = await axios.post(`/applyForLoan/${localStorage.userId}`,data);
             console.log(data)
             alert(res.data.msg)
             if(res.data.status){

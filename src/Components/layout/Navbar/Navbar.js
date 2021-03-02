@@ -20,7 +20,7 @@ const Navbar = () => {
                     <li className="nav-item dropdown">
                         <a className="nav-link dropdown-toggle"  role="button" data-toggle="dropdown" >
                             <img src={profile} width="40" height="40" className="rounded-circle" alt="profile" />
-                           <span className="h6 text-light p-1 font-weight-normal"> Vivek Thakare</span>
+                           <span className="h6 text-light p-1 font-weight-normal"> {localStorage.username}</span>
                         </a>
                         <div className="dropdown-menu" >
                             <Link to="/" className="dropdown-item">Dashboard</Link>

@@ -68,7 +68,9 @@ export default class Payment extends Component {
                 )
             }else{
                 return(
-                    <Redirect to='/'></Redirect>
+                    <Redirect to={{
+                        pathname : "/",
+                    }}></Redirect>
                 )
 
             }

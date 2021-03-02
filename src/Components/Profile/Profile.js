@@ -12,16 +12,16 @@ const Profile = () => {
     const [status, setStatus] = useState(false);
 
     useEffect(() => {
-        const getProfile = async(id) => {
+        const getProfile = async() => {
             try{
-                const res = await axios.get(`/getUserProfile/${id}`);
+                const res = await axios.get(`/getUserProfile/${localStorage.userId}`);
                 setUserProfile(res.data.data);
                 setStatus(true);
             }catch(err){
                 console.log("user profile",err);
             }
         }
-        getProfile(2);
+        getProfile();
 
         return () => {
             console.log("unmount");

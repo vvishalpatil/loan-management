@@ -29,11 +29,11 @@ def index():
 @app.route('/getAppliedLoanOptions', methods=['GET'])
 def get_applied_loan_options():
     cursor = mysql.connection.cursor()
-    query1 = '''SELECT DISTINCT(loan_type) FROM loan_info'''
+    query1 = '''SELECT DISTINCT(loan_type) FROM loan_info '''
     query2 = '''
            SELECT sum(paid_loan) as total_recovered , SUM(total_loan) as total_distributed, 
            MAX(loan_tenure - tenure_completed) as tenure
-           FROM loan_info;'''
+           FROM loan_info ;'''
     cursor.execute(query1)
     result = cursor.fetchall()
     cursor.execute(query2)
@@ -42,6 +42,7 @@ def get_applied_loan_options():
         loan_options = []
         for option in result:
             loan_options.append(option['loan_type'])
+        loan_options.append('All')
         return jsonify({'status': 'success', 'options': loan_options, "loan_summary": result2})
     else:
         return jsonify({'options': "no data"})
@@ -52,11 +53,12 @@ def get_applied_loan_options():
 def get_users():
     option = request.args.get('loantype')
     cur = mysql.connection.cursor()
-
+    if option == "All":
+        option = '%'
     # to get all user information with the associated loan type
     try:
         cur.execute('''SELECT * FROM user_info, loan_info 
-                        WHERE user_info.user_id = loan_info.user_id AND loan_type = %s;''', [option])
+                        WHERE user_info.user_id = loan_info.user_id AND loan_type LIKE %s;''', [option])
         res1 = cur.fetchall()
         if res1:
             return jsonify({"status": "success", "users": res1})
@@ -217,7 +219,7 @@ def apply_for_loan(uid):
     tenure = int(data['tenure'])
     cur = mysql.connection.cursor()
     cur.execute('''SELECT loan_id FROM loan_info 
-        WHERE user_id = %s and loan_type = %s''', (str(uid), loan_type))
+        WHERE user_id = %s and loan_type = %s and loan_status = 'active' ''', (str(uid), loan_type))
     result = cur.fetchone()
     if result is None:
         print(total_loan, tenure, loan_type, uid)
@@ -355,7 +357,7 @@ def get_user_loan_options(uid):
     try:
         cursor = mysql.connection.cursor()
         cursor.execute('''SELECT loan_type from loan_info 
-                                   WHERE user_id = %s; ''',
+                                   WHERE user_id = %s AND loan_status = 'active'; ''',
                        str(uid))
         result = cursor.fetchall()
         if result:
@@ -442,3 +444,6 @@ def update_user_profile(uid):
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+# SELECT * FROM `transaction_info` WHERE DATE(date) BETWEEN DATE_SUB(LAST_DAY(NOW()),INTERVAL DAY(LAST_DAY(NOW()))- 1 DAY) AND LAST_DAY(CURRENT_DATE())

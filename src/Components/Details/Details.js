@@ -30,6 +30,7 @@ const Details = (props) => {
       installment_due_date,
       user_id,
       loan_id,
+      loan_type
     } = props.userDetails;
 
     const payment_data = {
@@ -37,7 +38,17 @@ const Details = (props) => {
       installment_due_date,
       user_id,
       loan_id,
+      loan_type
     };
+
+    const closeLoanData = {
+      installment_amt: remaining_loan,
+      installment_due_date,
+      user_id,
+      loan_id,
+    };
+
+    console.log(closeLoanData, "Close loan");
 
     return (
       <div>
@@ -62,9 +73,12 @@ const Details = (props) => {
           </div>
         </div>
         <div className="container mt-4">
-          <button className="btn btn-outline-success btn-block ">
+          <Link
+            to={{ pathname: "/payment", payment_data: closeLoanData }}
+            className="btn btn-outline-success btn-block "
+          >
             Close Loan
-          </button>
+          </Link>
         </div>
       </div>
     );
