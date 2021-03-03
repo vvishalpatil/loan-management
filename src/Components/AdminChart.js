@@ -90,7 +90,7 @@ export default class AdminChart extends Component {
             {" "}
             Loan Distributed :{" "}
             <CurrencyFormat
-              value={this.state.total}
+              value={parseInt(this.state.total)}
               displayType={"text"}
               thousandSeparator={true}
               prefix={"Rs. "}

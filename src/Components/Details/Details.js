@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Link, Redirect } from "react-router-dom";
-import Payment from "./Payment";
 import CurrencyFormat from "react-currency-format";
 
 const tableStyle = {
@@ -22,7 +21,7 @@ const Details = (props) => {
   const tenure_remaining = loan_tenure - tenure_completed;
   const remaining_loan = total_loan - paid_loan;
   const transaction_history = props.transactionHistory;
-  console.log(typeof transaction_history);
+  // console.log(typeof transaction_history);
 
   const Pay = () => {
     const {
@@ -30,25 +29,28 @@ const Details = (props) => {
       installment_due_date,
       user_id,
       loan_id,
-      loan_type
+      loan_type,
     } = props.userDetails;
 
-    const payment_data = {
+    const paymentData = {
+      //Payload for the Payment component after clicking the Pay now button
       installment_amt,
       installment_due_date,
       user_id,
       loan_id,
-      loan_type
+      loan_type,
     };
 
     const closeLoanData = {
+      //Payload for the Payment component after clicking the close loan button
       installment_amt: remaining_loan,
       installment_due_date,
       user_id,
       loan_id,
+      loan_type,
     };
 
-    console.log(closeLoanData, "Close loan");
+    // console.log(closeLoanData, "Close loan");
 
     return (
       <div>
@@ -65,7 +67,7 @@ const Details = (props) => {
             <p className="card-text">Due Date: {installment_due_date} </p>
 
             <Link
-              to={{ pathname: "/payment", payment_data: payment_data }}
+              to={{ pathname: "/payment", payment_data: paymentData }}
               className="btn btn-primary mt-1"
             >
               Pay Now
@@ -90,7 +92,7 @@ const Details = (props) => {
     if (year < 1) {
       return <span>{month} mths.</span>;
     } else if (year == 1) {
-      if (month == 0) {
+      if (month == 0 && year == 1) {
         return <span>{year} yr.</span>;
       } else {
         return (
@@ -121,6 +123,7 @@ const Details = (props) => {
     }
   };
 
+
   return (
     <div className="card shadow">
       <div className="card-body">
@@ -145,7 +148,7 @@ const Details = (props) => {
                   <p className="card-text">
                     Loan Amount :{" "}
                     <CurrencyFormat
-                      value={parseInt(remaining_loan) + parseInt(paid_loan)}
+                      value={total_loan}
                       displayType={"text"}
                       thousandSeparator={true}
                       prefix={"Rs. "}
@@ -154,7 +157,7 @@ const Details = (props) => {
                   <p className="card-text">
                     Paid :{" "}
                     <CurrencyFormat
-                      value={paid_loan}
+                      value={parseInt(paid_loan)}
                       displayType={"text"}
                       thousandSeparator={true}
                       prefix={"Rs. "}
@@ -163,7 +166,7 @@ const Details = (props) => {
                   <p className="card-text">
                     Remaining :{" "}
                     <CurrencyFormat
-                      value={remaining_loan}
+                      value={parseInt(remaining_loan)}
                       displayType={"text"}
                       thousandSeparator={true}
                       prefix={"Rs. "}
@@ -187,7 +190,7 @@ const Details = (props) => {
                   <p className="card-text">
                     Total :{" "}
                     {formatTenure(
-                      parseInt(tenure_completed) + parseInt(tenure_remaining)
+                      loan_tenure
                     )}{" "}
                   </p>
                   <p className="card-text">

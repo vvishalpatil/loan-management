@@ -15,13 +15,15 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import TransactioStatusChart from "../../TransactionStatusChart";
 
+
 const AdminDash = () => {
   const [loanType, setLoanType] = useState(null);
-  const [loanOptions, setLoanOptions] = useState(null);
+  const [loanOptions, setLoanOptions] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const [loanChart, setLoanChart] = useState(null);
 
   useEffect(() => {
+    //API call for getting the loanTypes.
     const getLoanOptions = async () => {
       try {
         const res = await axios.get("/getAppliedLoanOptions");
@@ -29,7 +31,7 @@ const AdminDash = () => {
         setLoanChart(res.data.loan_summary);
         setLoanType(res.data.options[0]);
         setLoaded(true);
- 
+
         // console.log(d);
       } catch (err) {
         console.log(err);
@@ -39,17 +41,17 @@ const AdminDash = () => {
   }, []);
 
   const [userList, setUserList] = useState(null);
-
   const [status, setStatus] = useState(false);
   const [modalData, setModalData] = useState(null);
   const [searchType, setSearchType] = useState("Search By");
-  const [searchData, setSearchData] = useState('');
+  const [searchData, setSearchData] = useState("");
   const [searchData1, setSearchData1] = useState(null);
   const [tableData, setTableData] = useState(null);
   const [searchStatus, setSearchStatus] = useState(true);
   const [comparator, setComparator] = useState("=");
 
   useEffect(() => {
+    //API call for getting all the users associated with the selected LoanType.
     const getAllUsers = async () => {
       try {
         if (loanType) {
@@ -79,7 +81,7 @@ const AdminDash = () => {
           </td>
           <td className="text-justify">
             <CurrencyFormat
-              value={parseInt(remaining_loan) + parseInt(paid_loan)}
+              value={total_loan}
               displayType={"text"}
               thousandSeparator={true}
               prefix={"Rs. "}
@@ -88,7 +90,7 @@ const AdminDash = () => {
           <td className="text-justify">
             {" "}
             <CurrencyFormat
-              value={paid_loan}
+              value={parseInt(paid_loan)}
               displayType={"text"}
               thousandSeparator={true}
               prefix={"Rs. "}
@@ -96,7 +98,7 @@ const AdminDash = () => {
           </td>
           <td className="text-justify">
             <CurrencyFormat
-              value={remaining_loan}
+              value={parseInt(remaining_loan)}
               displayType={"text"}
               thousandSeparator={true}
               prefix={"Rs. "}
@@ -141,8 +143,10 @@ const AdminDash = () => {
         issue_date,
         loan_id,
       } = modalData;
+
       const tenure_remaining = loan_tenure - tenure_completed;
       const remaining_loan = total_loan - paid_loan;
+
       const loan = {
         paid: parseInt(paid_loan),
         remaining: parseInt(remaining_loan),
@@ -273,24 +277,34 @@ const AdminDash = () => {
         <div className="container-fluid mt-4">
           <div className="row mt-2 ">
             <div className="col-sm-3 mb-2">
-
               <ul className="nav nav-tabs " role="tablist">
                 <li className="nav-item">
-                  <a className="nav-link active" data-toggle="pill" href="#home">Loan</a>
+                  <a
+                    className="nav-link active"
+                    data-toggle="pill"
+                    href="#home"
+                  >
+                    Loan
+                  </a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" data-toggle="pill" href="#menu1">Transaction</a>
+                  <a className="nav-link" data-toggle="pill" href="#menu1">
+                    Transaction
+                  </a>
                 </li>
                 {/* <li class="nav-item">
                   <a class="nav-link" data-toggle="pill" href="#menu2">Menu 2</a>
                 </li> */}
               </ul>
               <div className="tab-content">
-                <div id="home" className=" tab-pane active"><br />
+                <div id="home" className=" tab-pane active">
+                  <br />
                   <AdminChart loan={loanChart} />
                 </div>
-                <div id="menu1" className=" tab-pane fade"><br />
-                  <TransactioStatusChart ></TransactioStatusChart>    </div>
+                <div id="menu1" className=" tab-pane fade">
+                  <br />
+                  <TransactioStatusChart></TransactioStatusChart>{" "}
+                </div>
                 {/* <div id="menu2" class=" tab-pane fade"><br />
                   <h3>Menu 2</h3>
                   <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
@@ -310,14 +324,14 @@ const AdminDash = () => {
                     >
                       {loanOptions
                         ? loanOptions.map((option, index) => (
-                          <option
-                            className="h6 text-success"
-                            key={index}
-                            value={option}
-                          >
-                            {option}
-                          </option>
-                        ))
+                            <option
+                              className="h6 text-success"
+                              key={index}
+                              value={option}
+                            >
+                              {option}
+                            </option>
+                          ))
                         : null}
                     </select>
                   </div>
@@ -350,23 +364,23 @@ const AdminDash = () => {
                       </select>
                     </div>
                     {searchType === "Name" ||
-                      searchType === "Search By" ||
-                      searchType === "User Id" ||
-                      searchType == "Date Issued (Range)" ||
-                      searchType === null ? null : (
-                        <div className="form-group">
-                          <select
-                            onChange={(e) => setComparator(e.target.value)}
-                            className="form-control w-100 mx-2"
-                            id="sel1"
-                            name="search_type"
-                          >
-                            <option defaultValue> = </option>
-                            <option> &gt; </option>
-                            <option> &lt; </option>
-                          </select>
-                        </div>
-                      )}
+                    searchType === "Search By" ||
+                    searchType === "User Id" ||
+                    searchType == "Date Issued (Range)" ||
+                    searchType === null ? null : (
+                      <div className="form-group">
+                        <select
+                          onChange={(e) => setComparator(e.target.value)}
+                          className="form-control w-100 mx-2"
+                          id="sel1"
+                          name="search_type"
+                        >
+                          <option defaultValue> = </option>
+                          <option> &gt; </option>
+                          <option> &lt; </option>
+                        </select>
+                      </div>
+                    )}
                     {searchType == "Date Issued (Range)" ? (
                       <React.Fragment>
                         <label className="pl-3">From</label>
@@ -387,15 +401,15 @@ const AdminDash = () => {
                         />
                       </React.Fragment>
                     ) : (
-                        <input
-                          className="form-control mx-2 w-25"
-                          onChange={(e) => setSearchData(e.target.value)}
-                          type={searchType == "Date Issued" ? "date" : "text"}
-                          name="search_key"
-                          value={searchData}
-                          placeholder="Search"
-                        />
-                      )}
+                      <input
+                        className="form-control mx-2 w-25"
+                        onChange={(e) => setSearchData(e.target.value)}
+                        type={searchType == "Date Issued" ? "date" : "text"}
+                        name="search_key"
+                        value={searchData}
+                        placeholder="Search"
+                      />
+                    )}
 
                     <button
                       onClick={(e) => handleSearch(e)}
@@ -431,12 +445,12 @@ const AdminDash = () => {
                       {searchStatus ? (
                         tableData.map(createTable)
                       ) : (
-                          <tr>
-                            <td colSpan="6" className="text-info h5">
-                              No Records found
+                        <tr>
+                          <td colSpan="6" className="text-info h5">
+                            No Records found
                           </td>
-                          </tr>
-                        )}
+                        </tr>
+                      )}
                     </tbody>
                   </table>
                 </div>
