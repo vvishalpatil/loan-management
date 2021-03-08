@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Spinner from "../Spinner";
-import AdminChart from "../../AdminChart";
-import LoanChart from "../../LoanChart";
-import TenureChart from "../../TenureChart";
+import AdminChart from "../../Charts/AdminChart";
+import LoanChart from "../../Charts/LoanChart";
+import TenureChart from "../../Charts/TenureChart";
 import CurrencyFormat from "react-currency-format";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,7 +13,7 @@ import {
   faLandmark,
   faMobileAlt,
 } from "@fortawesome/free-solid-svg-icons";
-import TransactioStatusChart from "../../TransactionStatusChart";
+import TransactioStatusChart from "../../Charts/TransactionStatusChart";
 
 
 const AdminDash = () => {
@@ -70,6 +70,7 @@ const AdminDash = () => {
   }, [loanType]);
 
   const createTable = (user, index) => {
+    //Creating Dynamic table according the data received
     if (user) {
       const { user_id, first_name, last_name, total_loan, paid_loan } = user;
       const remaining_loan = total_loan - paid_loan;
@@ -127,6 +128,7 @@ const AdminDash = () => {
   };
 
   const displayModal = () => {
+    //Modal to display the details of each users in the table. 
     if (modalData) {
       console.log("display modal", modalData);
       const {
@@ -239,6 +241,7 @@ const AdminDash = () => {
   };
 
   const handleSearch = async () => {
+    //API call to filter table data according to the selected filter type.
     try {
       const params = {
         search_type: searchType,

@@ -20,4 +20,6 @@ res = requests.put('http://127.0.0.1:5000/updateUserProfile/1', json=d)
 x = 10000/ 12
 print(x)
 
-pprint(res.json())
+# pprint(res.json())
+i = 2
+print(f"'{i}'")

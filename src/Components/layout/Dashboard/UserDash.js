@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import LoanChart from "../../LoanChart";
+import LoanChart from "../../Charts/LoanChart";
 import axios from "axios";
-import TenureChart from "../../TenureChart";
+import TenureChart from "../../Charts/TenureChart";
 import Spinner from "../Spinner";
 import Details from "../../Details/Details";
 import { Link, useLocation, useParams } from "react-router-dom";
@@ -29,7 +29,7 @@ const UserDash = () => {
       }
     };
     getLoanOptions(Number(localStorage.userId));
-    localStorage.userId = 3; //change user id from here for now
+    localStorage.userId = 2; //change user id from here for now
   }, []);
 
   

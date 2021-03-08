@@ -1,0 +1,105 @@
+import React from "react";
+import "./style.css";
+import { useForm } from "react-hook-form";
+import axios from "axios";
+import { useState } from "react/cjs/react.development";
+import { Redirect } from "react-router-dom";
+
+const LoanForm = () => {
+    
+  const { register, handleSubmit } = useForm();
+  const [redirect, setRedirect] = useState(false);
+
+  const onSubmit = async (data) => {
+    try {
+      data.tenure = Number(data.tenure) * 12;
+      const res = await axios.post(
+        `/applyForLoan/${localStorage.userId}`,
+        data
+      );
+      console.log(data);
+      alert(res.data.msg);
+      if (res.data.status) {
+        setRedirect(true);
+        console.log(redirect, "redirect");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  return (
+    <div>
+      <form
+        className="animate__animated animate__fadeIn  my-5"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <div className="container w-50 mx-auto">
+          <div className="text-left card shadow">
+            <div className="card-header h3 font-weight-normal font-italic text-center bg-info text-light">
+              New loan
+            </div>
+            <div className="card-body mt-2">
+              <div className="form-group">
+                <label htmlFor="loan_type">Select Loan Type</label>
+                <select
+                  className="form-control shadow-sm"
+                  ref={register}
+                  name="loan_type"
+                >
+                  <option>Personal Loan</option>
+                  <option>Home Loan</option>
+                  <option>Car Loan</option>
+                </select>
+              </div>
+              <div className="row">
+                <div className="col">
+                  <div className=" form-group">
+                    <label htmlFor="firstname">Loan Amount (In Rs.)</label>
+                    <input
+                      type="text"
+                      className="form-control shadow-sm"
+                      name="loan_amount"
+                      ref={register}
+                      required
+                      placeholder="Loan Amount"
+                    />
+                  </div>
+                </div>
+                <div className="col">
+                  <div className=" form-group">
+                    <label htmlFor="tenure">Tenure (In Years)</label>
+                    <select
+                      className="form-control shadow-sm"
+                      ref={register}
+                      name="tenure"
+                    >
+                      <option>1</option>
+                      <option>2</option>
+                      <option>3</option>
+                      <option>4</option>
+                      <option>5</option>
+                      <option>6</option>
+                      <option>7</option>
+                      <option>8</option>
+                      <option>9</option>
+                      <option>10</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="mx-auto ">
+              <button className=" btn btn-outline-primary shadow-sm mb-3">
+                Apply
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+      {redirect ? <Redirect to="/" /> : null}
+    </div>
+  );
+};
+
+export default LoanForm;

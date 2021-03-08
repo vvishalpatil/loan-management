@@ -3,31 +3,18 @@ import "./style.css";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 
-const UpdateProfile = props => {
+const Register = (props) => {
   const { register, handleSubmit } = useForm();
 
   const onSubmit = async (data) => {
     try {
-      const res = await axios.put(
-        `/updateUserProfile/${localStorage.userId}`,
-        data
-      );
+      const res = await axios.post();
       alert(res.data.message);
-      window.location.reload();
     } catch (err) {
-      console.log(err);
+      alert(err);
     }
   };
 
-  const {
-    first_name,
-    last_name,
-    mobile,
-    email,
-    gender,
-    dob,
-    address,
-  } = props.profile;
 
   return (
     <div>
@@ -35,10 +22,10 @@ const UpdateProfile = props => {
         className="animate__animated animate__fadeIn"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <div className="container-fluid">
-          <div className="text-left card shadow">
-            <div className="card-header h3 font-weight-normal font-italic text-center bg-success text-light">
-              Update Profile
+        <div className="container">
+          <div className="card rounded text-left">
+            <div className="card-header h4 font-weight-normal font-italic text-center  text-info">
+              Register
             </div>
             <div className="card-body mt-2">
               <div className="row">
@@ -50,7 +37,6 @@ const UpdateProfile = props => {
                       className="form-control shadow-sm"
                       name="first_name"
                       ref={register}
-                      defaultValue={first_name}
                       required
                       placeholder="Enter Firstname"
                     />
@@ -64,7 +50,6 @@ const UpdateProfile = props => {
                       className="form-control shadow-sm "
                       name="last_name"
                       ref={register}
-                      defaultValue={last_name}
                       placeholder="Enter Lastname"
                     />
                   </div>
@@ -79,7 +64,6 @@ const UpdateProfile = props => {
                       className="form-control shadow-sm"
                       name="mobile"
                       ref={register}
-                      defaultValue={mobile}
                       placeholder="Enter Mobile"
                     />
                   </div>
@@ -92,7 +76,6 @@ const UpdateProfile = props => {
                       className="form-control shadow-sm"
                       name="email"
                       ref={register}
-                      defaultValue={email}
                       placeholder="Enter Email"
                     />
                   </div>
@@ -105,7 +88,6 @@ const UpdateProfile = props => {
                   className="form-control shadow-sm"
                   name="address"
                   ref={register}
-                  defaultValue={address}
                   placeholder="Enter Address"
                 />
               </div>
@@ -116,7 +98,6 @@ const UpdateProfile = props => {
                     <br />
                     <select
                       name="gender"
-                      defaultValue={gender}
                       ref={register}
                       className="form-control"
                     >
@@ -134,7 +115,6 @@ const UpdateProfile = props => {
                       className="form-control shadow-sm"
                       name="dob"
                       ref={register}
-                      defaultValue={dob}
                     />
                   </div>
                 </div>
@@ -142,7 +122,7 @@ const UpdateProfile = props => {
             </div>
             <div className="mx-auto ">
               <button className=" btn btn-outline-primary shadow-sm mb-3">
-                Update
+                Register
               </button>
             </div>
           </div>
@@ -152,4 +132,4 @@ const UpdateProfile = props => {
   );
 };
 
-export default UpdateProfile;
+export default Register;
