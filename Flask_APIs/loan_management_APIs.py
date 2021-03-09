@@ -23,6 +23,32 @@ def index():
     return jsonify({"users": res})
 
 
+@app.route('/authenticate', methods=['GET', 'POST'])
+def authenticate():
+    if request.method == 'GET':
+        print("get request")
+
+    if request.method == 'POST':
+        cursor = mysql.connection.cursor()
+        data = request.json
+        values = [x.strip() for x in data.values()]
+        try:
+            cursor.execute('''SELECT user_id FROM user_info 
+                                WHERE first_name = %s AND last_name = %s''', (values[0], values[1]))
+            result = cursor.fetchone()
+            if result is None:
+                query = '''INSERT INTO user_info (first_name, last_name, mobile, email, address, gender, dob, user_name, password)
+                                VALUES %s;'''
+                cursor.execute(query, [values])
+                mysql.connection.commit()
+                return jsonify({"message": "registered successfully"})
+            else:
+                return jsonify({"message": "Already Registered"})
+        except Exception as e:
+            print(e)
+            return jsonify({"message": "something went wrong"})
+
+
 # ----------------------------------------------------Admin Dashboard APIs----------------------------------------------
 
 # API to get the different types of loan applied
@@ -448,4 +474,3 @@ def update_user_profile(uid):
 if __name__ == '__main__':
     app.run(debug=True)
 
-# SELECT * FROM `transaction_info` WHERE DATE(date) BETWEEN DATE_SUB(LAST_DAY(NOW()),INTERVAL DAY(LAST_DAY(NOW()))- 1 DAY) AND LAST_DAY(CURRENT_DATE())

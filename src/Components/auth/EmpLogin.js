@@ -2,7 +2,8 @@ import React from "react";
 import { faUserLock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-function EmpLogin() {
+const EmpLogin = () => {
+
   return (
     <div
       id="employee"

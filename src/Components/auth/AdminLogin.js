@@ -4,15 +4,21 @@ import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
 
 function AdminLogin(props) {
-  const [email, setUsername] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [loginStat, setLoginStat] = useState(true);
+  const [loginStat, setLoginStat] = useState(false);
 
   const login = (e) => {
     e.preventDefault();
+    if(username == "Admin@123" && password == "AdminPass"){
+      alert("success!");
+      setLoginStat(true);
+    }else{
+      alert("invalid username or password")
+    }
   };
 
-  if (loginStat) {
+  if (!loginStat) {
     return (
       <div
         id="admin"
@@ -41,7 +47,7 @@ function AdminLogin(props) {
               id="uname"
               placeholder="Enter username"
               name="uname"
-              value={email}
+              value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
           </div>
@@ -67,7 +73,7 @@ function AdminLogin(props) {
       </div>
     );
   } else {
-    return <Redirect to="/dash" />;
+    return <Redirect to="/admin" />;
   }
 }
 

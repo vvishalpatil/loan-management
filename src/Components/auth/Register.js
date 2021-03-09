@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./style.css";
 import { useForm } from "react-hook-form";
 import axios from "axios";
@@ -6,24 +6,25 @@ import axios from "axios";
 const Register = (props) => {
   const { register, handleSubmit } = useForm();
 
+
   const onSubmit = async (data) => {
     try {
-      const res = await axios.post();
-      alert(res.data.message);
+      const res = await axios.post('/authenticate',data);
+       alert(res.data.message);
     } catch (err) {
-      alert(err);
+      console.log(err);
     }
   };
 
 
   return (
-    <div>
+    <div className="">
       <form
         className="animate__animated animate__fadeIn"
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="container">
-          <div className="card rounded text-left">
+          <div className="card shadow rounded text-left">
             <div className="card-header h4 font-weight-normal font-italic text-center  text-info">
               Register
             </div>
@@ -49,6 +50,7 @@ const Register = (props) => {
                       type="text"
                       className="form-control shadow-sm "
                       name="last_name"
+                      required
                       ref={register}
                       placeholder="Enter Lastname"
                     />
@@ -63,6 +65,7 @@ const Register = (props) => {
                       type="text"
                       className="form-control shadow-sm"
                       name="mobile"
+                      required
                       ref={register}
                       placeholder="Enter Mobile"
                     />
@@ -75,6 +78,7 @@ const Register = (props) => {
                       type="email"
                       className="form-control shadow-sm"
                       name="email"
+                      required
                       ref={register}
                       placeholder="Enter Email"
                     />
@@ -87,6 +91,7 @@ const Register = (props) => {
                   type="text"
                   className="form-control shadow-sm"
                   name="address"
+                  required
                   ref={register}
                   placeholder="Enter Address"
                 />
@@ -114,7 +119,36 @@ const Register = (props) => {
                       type="date"
                       className="form-control shadow-sm"
                       name="dob"
+                      required
                       ref={register}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="row mt-1">
+                <div className="col-sm">
+                  <div className=" form-group">
+                    <label htmlFor="username">Username :- </label>
+                    <input
+                      type="text"
+                      className="form-control shadow-sm"
+                      name="user_name"
+                      ref={register}
+                      required
+                      placeholder="Enter Username"
+                    />
+                  </div>
+                </div>
+                <div className="col-sm">
+                  <div className=" form-group">
+                    <label htmlFor="password">Password :- </label>
+                    <input
+                      type="password"
+                      className="form-control shadow-sm "
+                      name="password"
+                      required
+                      ref={register}
+                      placeholder="Password"
                     />
                   </div>
                 </div>
