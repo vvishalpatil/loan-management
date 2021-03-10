@@ -1,9 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import { faUserLock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from "axios";
+import { Redirect } from "react-router";
 
 const EmpLogin = () => {
+  const [userName,setUserName] = useState('')
+  const [password,setPassword] = useState('')
+  const [redirect,setRedirect] = useState(false)
+  const verifyLogin = async()=>{
+    const params={user_name:userName,password:password}
+    try {
+      const res = await axios.get('/authenticate',{params:params});
+        console.log('verifyLogin',res.data)
+        if(res.data.login==true){
+          localStorage.userId=res.data.id
+          setRedirect(true)
+        }
+    } catch (err) {
+      console.log(err);
+    }
 
+  }
+  
+ if(redirect==false){
   return (
     <div
       id="employee"
@@ -19,7 +39,7 @@ const EmpLogin = () => {
         />
       </span>
       <br />
-      <form>
+      
         <div className="form-group">
           <label htmlFor="username" className="h6">
             Username :-
@@ -30,6 +50,7 @@ const EmpLogin = () => {
             className="form-control"
             placeholder="Enter username"
             name="username"
+            onChange={(e)=>setUserName(e.target.value)}
           />
         </div>
 
@@ -43,15 +64,22 @@ const EmpLogin = () => {
             className="form-control"
             placeholder="Enter password"
             name="password"
+            onChange={(e)=>setPassword(e.target.value)}
           />
         </div>
         <br />
-        <button type="submit" className="btn btn-primary">
+        <button type="submit" className="btn btn-primary" onClick={verifyLogin}>
           Login
         </button>
-      </form>
     </div>
   );
+ }else if(redirect==true){
+
+   return(
+     <Redirect to='/'></Redirect>
+   )
+
+ }
 }
 
 export default EmpLogin;
