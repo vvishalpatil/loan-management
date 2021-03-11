@@ -15,7 +15,11 @@ const EmpLogin = () => {
         console.log('verifyLogin',res.data)
         if(res.data.login==true){
           localStorage.userId=res.data.id
+          localStorage.username=res.data.user_name
           setRedirect(true)
+
+        }else{
+          alert("Invalid Username or Password")
         }
     } catch (err) {
       console.log(err);

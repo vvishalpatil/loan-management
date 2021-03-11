@@ -12,6 +12,7 @@ function AdminLogin(props) {
     e.preventDefault();
     if(username == "Admin@123" && password == "AdminPass"){
       alert("success!");
+      localStorage.username=username
       setLoginStat(true);
     }else{
       alert("invalid username or password")

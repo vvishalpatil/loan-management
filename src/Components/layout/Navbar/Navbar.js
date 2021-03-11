@@ -60,7 +60,7 @@ const Navbar = () => {
               <Link to="/profile" className="dropdown-item">
                 Edit Profile
               </Link>
-              <Link to="/logout" className="dropdown-item">
+              <Link to="/login" onClick={()=>localStorage.clear()} className="dropdown-item">
                 Log Out
               </Link>
             </div>
