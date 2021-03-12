@@ -29,7 +29,7 @@ const UserDash = () => {
       }
     };
     getLoanOptions(Number(localStorage.userId))
-    localStorage.userId = 2; //change user id from here for now
+    console.log(localStorage.userId)
   }, []);
 
   

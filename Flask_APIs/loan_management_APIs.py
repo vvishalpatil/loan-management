@@ -26,7 +26,27 @@ def index():
 @app.route('/authenticate', methods=['GET', 'POST'])
 def authenticate():
     if request.method == 'GET':
-        print("get request")
+        cur = mysql.connection.cursor()
+        print("get request to authenticate login")
+        username = request.args.get('user_name')
+        password = request.args.get('password')
+        query = ''' select user_name,user_id,password from user_info where user_name = %s OR email = %s'''
+        cur.execute(query,(username,username))
+        res = cur.fetchone()
+        print('authentication res', res)
+
+        if res:
+            if res['password'] == password:
+                print('authentication completed, Correct username and password ')
+                return jsonify({"login": True, "token": 'edit here for token', "id": res['user_id'],
+                                'user_name': res['user_name']})
+            else:
+                return jsonify({"login": False})
+        else:
+            return jsonify({"login": False})
+
+
+
 
     if request.method == 'POST':
         cursor = mysql.connection.cursor()

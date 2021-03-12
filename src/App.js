@@ -9,6 +9,7 @@ import AdminDash from "./Components/layout/Dashboard/AdminDash";
 import LoanForm from "./Components/Details/LoanForm";
 import Payment from "./Components/Details/Payment";
 import Login from "./Components/auth/Login";
+import ProtectedRoute from "./Components/auth/ProtectedRoute";
 
 const App = () => {
   return (
@@ -19,11 +20,11 @@ const App = () => {
           <React.Fragment>
             <div className="text-center">
               <Navbar />
-              <Route exact path="/" component={UserDash} />
-              <Route exact path="/admin" component={AdminDash} />
-              <Route exact path="/profile" component={Profile} />
-              <Route exact path="/newloan" component={LoanForm} />
-              <Route exact path="/payment" component={Payment} />
+              <ProtectedRoute exact path="/" component={UserDash} />
+              <ProtectedRoute exact path="/admin" component={AdminDash} />
+              <ProtectedRoute exact path="/profile" component={Profile} />
+              <ProtectedRoute exact path="/newloan" component={LoanForm} />
+              <ProtectedRoute exact path="/payment" component={Payment} />
               <br />
               <Footer />
             </div>
