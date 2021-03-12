@@ -60,8 +60,8 @@ const Navbar = () => {
               <Link to="/profile" className="dropdown-item">
                 Edit Profile
               </Link>
-              <Link to="/logout" className="dropdown-item">
-                Log Out
+              <Link to="/logout" className="dropdown-item">    {/* Clear the localStorage.id on OnClick event */}
+                Log Out 
               </Link>
             </div>
           </li>
