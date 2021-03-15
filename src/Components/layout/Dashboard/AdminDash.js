@@ -15,7 +15,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import TransactioStatusChart from "../../Charts/TransactionStatusChart";
 
-
 const AdminDash = () => {
   const [loanType, setLoanType] = useState(null);
   const [loanOptions, setLoanOptions] = useState([]);
@@ -31,8 +30,6 @@ const AdminDash = () => {
         setLoanChart(res.data.loan_summary);
         setLoanType(res.data.options[0]);
         setLoaded(true);
-
-        // console.log(d);
       } catch (err) {
         console.log(err);
       }
@@ -128,7 +125,7 @@ const AdminDash = () => {
   };
 
   const displayModal = () => {
-    //Modal to display the details of each users in the table. 
+    //Modal to display the details of each users in the table.
     if (modalData) {
       console.log("display modal", modalData);
       const {
@@ -252,7 +249,7 @@ const AdminDash = () => {
       };
       const res = await axios.get("/filterSearch/", { params: params });
       console.log(res.data);
-      if (res.data.data != "null") {
+      if (res.data.data !== "null") {
         setTableData(res.data.data);
       } else {
         setSearchStatus(false);
@@ -267,11 +264,6 @@ const AdminDash = () => {
     setSearchStatus(true);
     setSearchType("Search By");
     setSearchData("");
-  };
-
-  const handleOnChange = (e) => {
-    setSearchData(e.target.value);
-    console.log(e);
   };
 
   if (loaded) {
@@ -306,7 +298,7 @@ const AdminDash = () => {
                 </div>
                 <div id="menu1" className=" tab-pane fade">
                   <br />
-                  <TransactioStatusChart></TransactioStatusChart>{" "}
+                  <TransactioStatusChart />{" "}
                 </div>
                 {/* <div id="menu2" class=" tab-pane fade"><br />
                   <h3>Menu 2</h3>
@@ -366,10 +358,10 @@ const AdminDash = () => {
                         <option>Tenure completed</option>
                       </select>
                     </div>
-                    {searchType === "Name" ||
+                    {searchType === "Name" || //conditional rendering to show or hide specific input boxes.
                     searchType === "Search By" ||
                     searchType === "User Id" ||
-                    searchType == "Date Issued (Range)" ||
+                    searchType === "Date Issued (Range)" ||
                     searchType === null ? null : (
                       <div className="form-group">
                         <select
@@ -384,7 +376,7 @@ const AdminDash = () => {
                         </select>
                       </div>
                     )}
-                    {searchType == "Date Issued (Range)" ? (
+                    {searchType === "Date Issued (Range)" ? (
                       <React.Fragment>
                         <label className="pl-3">From</label>
                         <input
@@ -407,7 +399,7 @@ const AdminDash = () => {
                       <input
                         className="form-control mx-2 w-25"
                         onChange={(e) => setSearchData(e.target.value)}
-                        type={searchType == "Date Issued" ? "date" : "text"}
+                        type={searchType === "Date Issued" ? "date" : "text"}
                         name="search_key"
                         value={searchData}
                         placeholder="Search"

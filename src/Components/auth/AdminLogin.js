@@ -3,19 +3,24 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
 
-function AdminLogin(props) {
+const AdminLogin = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginStat, setLoginStat] = useState(false);
 
   const login = (e) => {
     e.preventDefault();
-    if(username == "Admin@123" && password == "AdminPass"){
+    if (username === "TheAdmin" && password === "AdminPass") {
       alert("success!");
-      localStorage.username=username
+      let obj = {
+        id: 1,
+        username: username,
+        type: "Admin",
+      };
+      localStorage.reqData = btoa(JSON.stringify(obj)); //encrypting and storing the required data in local Storage.
       setLoginStat(true);
-    }else{
-      alert("invalid username or password")
+    } else {
+      alert("invalid username or password");
     }
   };
 
@@ -76,6 +81,6 @@ function AdminLogin(props) {
   } else {
     return <Redirect to="/admin" />;
   }
-}
+};
 
 export default AdminLogin;

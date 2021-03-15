@@ -31,7 +31,7 @@ def authenticate():
         username = request.args.get('user_name')
         password = request.args.get('password')
         query = ''' select user_name,user_id,password from user_info where user_name = %s OR email = %s'''
-        cur.execute(query,(username,username))
+        cur.execute(query, (username, username))
         res = cur.fetchone()
         print('authentication res', res)
 
@@ -44,9 +44,6 @@ def authenticate():
                 return jsonify({"login": False})
         else:
             return jsonify({"login": False})
-
-
-
 
     if request.method == 'POST':
         cursor = mysql.connection.cursor()

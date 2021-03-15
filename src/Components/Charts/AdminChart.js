@@ -49,8 +49,8 @@ export default class AdminChart extends Component {
     console.log(month, year);
     if (year < 1) {
       return <span>{month} mths.</span>;
-    } else if (year == 1) {
-      if (month == 0) {
+    } else if (year === 1) {
+      if (month === 0) {
         return <span>{year} yr.</span>;
       } else {
         return (

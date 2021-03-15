@@ -4,10 +4,11 @@ import axios from "axios";
 import TenureChart from "../../Charts/TenureChart";
 import Spinner from "../Spinner";
 import Details from "../../Details/Details";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation} from "react-router-dom";
 
 const UserDash = () => {
-  // const {id} = useParams();
+  const {id} = JSON.parse(atob(localStorage.reqData)); //decrypting and getting the User id from Local Storage.
+  
   const location = useLocation(); // contains the selected loanType after redirection from Payment Component.
   const [loanType, setLoanType] = useState(null);
   const [loanOptions, setLoanOptions] = useState(null);
@@ -18,8 +19,7 @@ const UserDash = () => {
       try {
         const res = await axios.get(`/getUserLoanOptions/${id}`);
         setLoanOptions(res.data.loan_options);
-        // console.log(loanOptions, "loan options");
-        if (location.state == undefined) {
+        if (location.state === undefined) {
           setLoanType(res.data.loan_options[0]);
         } else {
           setLoanType(location.state.loanType);
@@ -28,8 +28,7 @@ const UserDash = () => {
         console.log(err);
       }
     };
-    getLoanOptions(Number(localStorage.userId))
-    console.log(localStorage.userId)
+    getLoanOptions(Number(id));
   }, []);
 
   
@@ -48,15 +47,13 @@ const UserDash = () => {
           });
           setUserDetails(res.data.data);
           setTransactionHistory(res.data.transaction_history);
-          // console.log(res.data.transaction_history, "user dash state");
-          // console.log(res.data.data);
           setLoaded(true);
         }
       } catch (err) {
         console.log(err);
       }
     };
-    getLoanDetails(Number(localStorage.userId));
+    getLoanDetails(Number(id));
   }, [loanType]);
 
   const handleChange = (e) => {
@@ -67,7 +64,7 @@ const UserDash = () => {
   const mapLoanOptions = () => {
     //populating the dropdown with options after redirection from Payment component
     if (loanOptions) {
-      if (loanType != undefined) {
+      if (loanType !== undefined) {
         const { loanType } = location.state;
         return (
           <React.Fragment>
@@ -75,7 +72,7 @@ const UserDash = () => {
               {loanType}
             </option>
             {loanOptions.map((option, index) => {
-              if (option != loanType) {
+              if (option !== loanType) {
                 return (
                   <option
                     className="h6 text-success"
@@ -119,7 +116,7 @@ const UserDash = () => {
         };
         return (
           <div>
-            {userDetails.loan_status == "active" ? (
+            {userDetails.loan_status === "active" ? (
               <div className="container-fluid ">
                 <div className="row mt-2 ">
                   <div className="col-sm-3 mb-2">
@@ -175,7 +172,7 @@ const UserDash = () => {
                 }}
                 name="loanType"
               >
-                {loanOptions && location.state == undefined //populating the dropdown with dynamic options
+                {loanOptions && location.state === undefined //populating the dropdown with dynamic options
                   ? loanOptions.map((option, index) => (
                       <option
                         className="h6 text-success"

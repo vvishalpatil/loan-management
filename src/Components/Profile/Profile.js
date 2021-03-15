@@ -13,14 +13,16 @@ import axios from "axios";
 import Spinner from "../layout/Spinner";
 
 const Profile = () => {
+
+  const {id} = JSON.parse(atob(localStorage.reqData)); //decrypting the local Storage data and getting the id.
+
   const [userProfile, setUserProfile] = useState({});
   const [status, setStatus] = useState(false);
 
   useEffect(() => {
     const getProfile = async () => {
       try {
-       
-        const res = await axios.get(`/getUserProfile/${localStorage.userId}`);
+        const res = await axios.get(`/getUserProfile/${id}`);
         setUserProfile(res.data.data);
         setStatus(true);
       } catch (err) {

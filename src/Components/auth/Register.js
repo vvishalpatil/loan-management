@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import "./style.css";
 import { useForm } from "react-hook-form";
 import axios from "axios";
@@ -6,16 +6,14 @@ import axios from "axios";
 const Register = (props) => {
   const { register, handleSubmit } = useForm();
 
-
   const onSubmit = async (data) => {
     try {
-      const res = await axios.post('/authenticate',data);
-       alert(res.data.message);
+      const res = await axios.post("/authenticate", data); //API call to register the user.
+      alert(res.data.message);
     } catch (err) {
       console.log(err);
     }
   };
-
 
   return (
     <div className="">

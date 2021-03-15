@@ -41,13 +41,13 @@ export default class TenureChart extends Component {
     };
   }
 
-  formatTenure() {
+  formatTenure() {    //function to display tenure remaining in months and years
     let year = parseInt(this.state.totalTenure / 12);
     let month = this.state.totalTenure % 12;
     if (year < 1) {
       return <span>{month} mths.</span>;
-    } else if (year == 1) {
-      if (month == 0) {
+    } else if (year === 1) {
+      if (month === 0) {
         return <span>{year} yr.</span>;
       } else {
         return (

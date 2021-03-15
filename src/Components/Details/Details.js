@@ -1,11 +1,6 @@
-import React, { useState } from "react";
-import { Link, Redirect } from "react-router-dom";
+import React from "react";
+import { Link } from "react-router-dom";
 import CurrencyFormat from "react-currency-format";
-
-const tableStyle = {
-  borderCollapse: "separate",
-  borderSpacing: "0 10px",
-};
 
 const Details = (props) => {
   const {
@@ -13,15 +8,12 @@ const Details = (props) => {
     paid_loan,
     loan_tenure,
     tenure_completed,
-    installment_due_date,
-    installment_amt,
     loan_type,
   } = props.userDetails;
 
   const tenure_remaining = loan_tenure - tenure_completed;
   const remaining_loan = total_loan - paid_loan;
   const transaction_history = props.transactionHistory;
-  // console.log(typeof transaction_history);
 
   const Pay = () => {
     const {
@@ -49,8 +41,6 @@ const Details = (props) => {
       loan_id,
       loan_type,
     };
-
-    // console.log(closeLoanData, "Close loan");
 
     return (
       <div>
@@ -87,12 +77,13 @@ const Details = (props) => {
   };
 
   const formatTenure = (tenure) => {
+    //function to display tenure remaining in months and years
     let year = parseInt(tenure / 12);
     let month = tenure % 12;
     if (year < 1) {
       return <span>{month} mths.</span>;
-    } else if (year == 1) {
-      if (month == 0 && year == 1) {
+    } else if (year === 1) {
+      if (month === 0 && year === 1) {
         return <span>{year} yr.</span>;
       } else {
         return (
@@ -120,9 +111,11 @@ const Details = (props) => {
 
       case "red":
         return "text-danger";
+
+      default:
+        return "text-light";
     }
   };
-
 
   return (
     <div className="card shadow">
@@ -188,10 +181,7 @@ const Details = (props) => {
                 <hr></hr>
                 <div className="text-left ml-2  font-italic">
                   <p className="card-text">
-                    Total :{" "}
-                    {formatTenure(
-                      loan_tenure
-                    )}{" "}
+                    Total : {formatTenure(loan_tenure)}{" "}
                   </p>
                   <p className="card-text">
                     Completed : {formatTenure(tenure_completed)}{" "}
@@ -224,7 +214,10 @@ const Details = (props) => {
                   </thead>
                   <tbody>
                     {transaction_history
-                      ? transaction_history.map((res, index) => (
+                      ? transaction_history.map((
+                          res,
+                          index //displaying the last three transactions of the user.
+                        ) => (
                           <tr key={index}>
                             <td>
                               <span className={setStatusColor(res.status)}>

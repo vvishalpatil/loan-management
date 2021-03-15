@@ -6,17 +6,16 @@ import { useState } from "react/cjs/react.development";
 import { Redirect } from "react-router-dom";
 
 const LoanForm = () => {
-    
+  const { id } = JSON.parse(atob(localStorage.reqData)); //decrypting and accessing id from localStorage.
+
   const { register, handleSubmit } = useForm();
   const [redirect, setRedirect] = useState(false);
 
   const onSubmit = async (data) => {
+    //API call to register the user applied loan.
     try {
-      data.tenure = Number(data.tenure) * 12;
-      const res = await axios.post(
-        `/applyForLoan/${localStorage.userId}`,
-        data
-      );
+      data.tenure = Number(data.tenure) * 12;      // Converting the tenure in months..(user will select in years).
+      const res = await axios.post(`/applyForLoan/${id}`, data);
       console.log(data);
       alert(res.data.msg);
       if (res.data.status) {
@@ -97,7 +96,7 @@ const LoanForm = () => {
           </div>
         </div>
       </form>
-      {redirect ? <Redirect to="/" /> : null}
+      {redirect ? <Redirect to="/user" /> : null}
     </div>
   );
 };

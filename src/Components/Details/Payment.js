@@ -16,6 +16,7 @@ export default class Payment extends Component {
   }
 
   payMoney = async (amount, user_id, loan_id) => {
+    //API call to pay the installment amount.
     try {
       const res = await axios.get("/payLoan/", {
         params: { uid: user_id, lid: loan_id, amount: amount },
@@ -71,7 +72,7 @@ export default class Payment extends Component {
         return (
           <Redirect
             to={{
-              pathname: "/",
+              pathname: "/user",
               state: {
                 loanType: this.state.loanType,
               },

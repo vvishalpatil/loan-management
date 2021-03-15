@@ -1,8 +1,6 @@
 import React, { Component } from "react";
-import { Bar, Doughnut } from "react-chartjs-2";
-import CurrencyFormat from "react-currency-format";
+import { Bar} from "react-chartjs-2";
 import axios from "axios";
-import { data } from "jquery";
 
 export default class TransactioStatusChart extends Component {
   constructor(props) {
@@ -107,21 +105,21 @@ export default class TransactioStatusChart extends Component {
 
     console.log(this.state, "state in fetch data");
   };
+
+
   componentDidMount() {
     let d = new Date()
     let dateStr = `${d.getFullYear()}-${d.getMonth() + 1}`;
     console.log(d.getMonth(),"month");
     this.fetchData(dateStr);
   }
+
+
   handleChange(e) {
-    console.log(e.target.value,"onchange");
-    
     this.fetchData(e.target.value);
   }
 
   render() {
-    let d = new Date()
-    let dateStr = `${d.getFullYear()}-${d.getMonth() + 1}`;
     if (this.state.display) {
       return (
         <div className="card rounded shadow animate__animated animate__pulse ">

@@ -3,15 +3,14 @@ import "./style.css";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 
-const UpdateProfile = props => {
+const UpdateProfile = (props) => {
+  const { id } = JSON.parse(atob(localStorage.reqData));
   const { register, handleSubmit } = useForm();
 
   const onSubmit = async (data) => {
+    //API call to update the User's Profile.
     try {
-      const res = await axios.put(
-        `/updateUserProfile/${localStorage.userId}`,
-        data
-      );
+      const res = await axios.put(`/updateUserProfile/${id}`, data);
       alert(res.data.message);
       window.location.reload();
     } catch (err) {
