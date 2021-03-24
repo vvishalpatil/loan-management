@@ -9,6 +9,7 @@ const Details = (props) => {
     loan_tenure,
     tenure_completed,
     loan_type,
+    loan_status
   } = props.userDetails;
 
   const tenure_remaining = loan_tenure - tenure_completed;
@@ -31,6 +32,7 @@ const Details = (props) => {
       user_id,
       loan_id,
       loan_type,
+      type:'installment'
     };
 
     const closeLoanData = {
@@ -40,38 +42,53 @@ const Details = (props) => {
       user_id,
       loan_id,
       loan_type,
+      type:'closeLoan'
     };
 
     return (
       <div>
-        <div className="card shadow-sm mt-4">
-          <div className="card-body">
-            <div
-              className="card-header h6 rounded text-white"
-              style={{ backgroundColor: "#76b900" }}
-            >
-              Current Installment
-            </div>
-            <hr></hr>
-            <p className="card-text my-2">Amount : Rs. {installment_amt} </p>
-            <p className="card-text">Due Date: {installment_due_date} </p>
+        {loan_status!== 'closed' ?
+         <div className="card shadow-sm mt-4">
+         <div className="card-body">
+           <div
+             className="card-header h6 rounded text-white"
+             style={{ backgroundColor: "#76b900" }}
+           >
+             Current Installment
+           </div>
+           <hr></hr>
+           <p className="card-text my-2">Amount : Rs. {installment_amt} </p>
+           <p className="card-text">Due Date: {installment_due_date} </p>
 
-            <Link
-              to={{ pathname: "/payment", payment_data: paymentData }}
-              className="btn btn-primary mt-1"
-            >
-              Pay Now
-            </Link>
+           <Link
+             to={{ pathname: "/payment", payment_data: paymentData }}
+             className="btn btn-primary mt-1"
+           >
+             Pay Now
+           </Link>
+         </div>
+       </div>:
+        <div className="card shadow-sm mt-4">
+        <div className="card-body">
+          <div
+            className="card-header h6 rounded text-white"
+            style={{ backgroundColor: "#76b900" }}
+          >
+            Current Installment
           </div>
+          <hr></hr>
+          <b>This Loan is closed.</b>
         </div>
-        <div className="container mt-4">
+      </div>
+       }
+        {loan_status!=='closed'?<div className="container mt-4">
           <Link
             to={{ pathname: "/payment", payment_data: closeLoanData }}
             className="btn btn-outline-success btn-block "
           >
             Close Loan
           </Link>
-        </div>
+        </div>:null}
       </div>
     );
   };

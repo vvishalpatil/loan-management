@@ -14,12 +14,14 @@ import {
   faMobileAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import TransactioStatusChart from "../../Charts/TransactionStatusChart";
+import { Link } from "react-router-dom";
 
 const AdminDash = () => {
   const [loanType, setLoanType] = useState(null);
   const [loanOptions, setLoanOptions] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const [loanChart, setLoanChart] = useState(null);
+
 
   useEffect(() => {
     //API call for getting the loanTypes.
@@ -69,13 +71,25 @@ const AdminDash = () => {
   const createTable = (user, index) => {
     //Creating Dynamic table according the data received
     if (user) {
-      const { user_id, first_name, last_name, total_loan, paid_loan } = user;
+      const { user_id, first_name, last_name, total_loan, paid_loan, installment_due_date, loan_id, loan_type, loan_status } = user;
       const remaining_loan = total_loan - paid_loan;
+
+      // const closeLoanData = {
+      //   //Payload for the Payment component after clicking the close loan button
+      //   installment_amt: remaining_loan,
+      //   installment_due_date,
+      //   user_id,
+      //   loan_id,
+      //   loan_type,
+      // };
       return (
         <tr key={index}>
           <td className="text-justify">{user_id}</td>
           <td className="text-justify">
             {first_name} {last_name}
+          </td>
+          <td className="text-justify">
+            {loan_id}
           </td>
           <td className="text-justify">
             <CurrencyFormat
@@ -102,7 +116,9 @@ const AdminDash = () => {
               prefix={"Rs. "}
             />
           </td>
-
+          <td className="text-justify">
+            {loan_status}
+          </td>
           <td className="d-flex ">
             <button
               type="button"
@@ -113,9 +129,13 @@ const AdminDash = () => {
             >
               View Chart
             </button>
-            <button className="container ml-2 btn btn-outline-success">
-              Close Loan
-            </button>
+              {/* <Link
+                to={{ pathname: "/payment", payment_data: closeLoanData }}
+                className="btn btn-outline-success btn-block "
+              >
+                Close Loan
+          </Link> */}
+           
           </td>
         </tr>
       );
@@ -319,14 +339,14 @@ const AdminDash = () => {
                     >
                       {loanOptions
                         ? loanOptions.map((option, index) => (
-                            <option
-                              className="h6 text-success"
-                              key={index}
-                              value={option}
-                            >
-                              {option}
-                            </option>
-                          ))
+                          <option
+                            className="h6 text-success"
+                            key={index}
+                            value={option}
+                          >
+                            {option}
+                          </option>
+                        ))
                         : null}
                     </select>
                   </div>
@@ -359,10 +379,10 @@ const AdminDash = () => {
                       </select>
                     </div>
                     {searchType === "Name" || //conditional rendering to show or hide specific input boxes.
-                    searchType === "Search By" ||
-                    searchType === "User Id" ||
-                    searchType === "Date Issued (Range)" ||
-                    searchType === null ? null : (
+                      searchType === "Search By" ||
+                      searchType === "User Id" ||
+                      searchType === "Date Issued (Range)" ||
+                      searchType === null ? null : (
                       <div className="form-group">
                         <select
                           onChange={(e) => setComparator(e.target.value)}
@@ -430,9 +450,11 @@ const AdminDash = () => {
                       <tr>
                         <th className="h6">ID</th>
                         <th className="h6">Name</th>
+                        <th className="h6">Loan ID</th>
                         <th className="h6">Loan Amount</th>
                         <th className="h6">Loan Paid</th>
                         <th className="h6">Loan Remaining</th>
+                        <th className="h6">Loan Status</th>
                         <th className="h6 text-center">Action</th>
                       </tr>
                     </thead>

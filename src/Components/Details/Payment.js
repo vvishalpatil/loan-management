@@ -8,18 +8,19 @@ export default class Payment extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loanType: this.props.location.payment_data.loan_type,
+      loanId: this.props.location.payment_data.loan_id,
       res: null,
       payment_done: false,
       redirect: false,
     };
   }
 
-  payMoney = async (amount, user_id, loan_id) => {
+  payMoney = async (amount, user_id, loan_id,type) => {
     //API call to pay the installment amount.
     try {
+      console.log(type)
       const res = await axios.get("/payLoan/", {
-        params: { uid: user_id, lid: loan_id, amount: amount },
+        params: { uid: user_id, lid: loan_id, amount: amount ,type:type },
       });
       this.setState({ res: res.data, payment_done: true });
     } catch (err) {
@@ -33,7 +34,8 @@ export default class Payment extends Component {
       this.payMoney(
         payment_data.installment_amt,
         payment_data.user_id,
-        payment_data.loan_id
+        payment_data.loan_id,
+        payment_data.type
       );
     }, 3000);
     setTimeout(() => {
@@ -74,7 +76,7 @@ export default class Payment extends Component {
             to={{
               pathname: "/user",
               state: {
-                loanType: this.state.loanType,
+                loanId: this.state.loanId,
               },
             }}
           ></Redirect>

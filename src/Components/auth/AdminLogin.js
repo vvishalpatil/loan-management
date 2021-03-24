@@ -1,30 +1,37 @@
 import { faUserLock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
+import axios from "axios";
 import { Redirect } from "react-router-dom";
 
 const AdminLogin = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [loginStat, setLoginStat] = useState(false);
+  const [redirect, setRedirect] = useState(false);
 
-  const login = (e) => {
-    e.preventDefault();
-    if (username === "TheAdmin" && password === "AdminPass") {
-      alert("success!");
-      let obj = {
-        id: 1,
-        username: username,
-        type: "Admin",
-      };
-      localStorage.reqData = btoa(JSON.stringify(obj)); //encrypting and storing the required data in local Storage.
-      setLoginStat(true);
-    } else {
-      alert("invalid username or password");
+  const verifyLogin = async () => {
+    const params = { user_name: username, password: password, type: "Admin" };
+    try {
+      const res = await axios.get("/authenticate", { params: params }); //API call for Admin login Authentication.
+      console.log("verifyLogin", res.data);
+      if (res.data.login === true) {
+        let reqData = {
+          id: res.data.id,
+          username: res.data.user_name,
+          type: "Admin",
+        };
+        localStorage.reqData = btoa(JSON.stringify(reqData)); //encrypting and storing the required data in local Storage
+        setRedirect(true);
+      } else {
+        alert("Invalid Username or Password");
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
+  
 
-  if (!loginStat) {
+  if (redirect === false) {
     return (
       <div
         id="admin"
@@ -41,7 +48,7 @@ const AdminLogin = () => {
           />
         </span>
         <br />
-        <form onSubmit={(e) => login(e)}>
+      
           <div className="form-group">
             <label htmlFor="uname" className="h6 text-left">
               Username :-
@@ -72,14 +79,14 @@ const AdminLogin = () => {
             />
           </div>
           <br />
-          <button type="submit" value="Submit" className="btn btn-primary">
+          <button type="submit" onClick={verifyLogin} className="btn btn-primary">
             Login
           </button>
-        </form>
+        
       </div>
     );
-  } else {
-    return <Redirect to="/admin" />;
+  } else if(redirect === true) {
+    return <Redirect to= "/admin"/>;
   }
 };
 

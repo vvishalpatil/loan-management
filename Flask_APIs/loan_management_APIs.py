@@ -30,16 +30,25 @@ def authenticate():
         print("get request to authenticate login")
         username = request.args.get('user_name')
         password = request.args.get('password')
-        query = ''' select user_name,user_id,password from user_info where user_name = %s OR email = %s'''
-        cur.execute(query, (username, username))
-        res = cur.fetchone()
-        print('authentication res', res)
+        type = request.args.get('type')
+        global id
+        if type == 'Admin':
+            query = ''' select user_name,id,password from admin_info where user_name = %s OR email = %s'''
+            cur.execute(query, (username, username))
+            res = cur.fetchone()
+            id = res['id']
+        else:
+            query = ''' select user_name,user_id,password from user_info where user_name = %s OR email = %s'''
+            cur.execute(query, (username, username))
+            res = cur.fetchone()
+            id = res['user_id']
 
         if res:
             if res['password'] == password:
                 print('authentication completed, Correct username and password ')
-                return jsonify({"login": True, "token": 'edit here for token', "id": res['user_id'],
+                return jsonify({"login": True, "token": 'edit here for token', "id": id,
                                 'user_name': res['user_name']})
+
             else:
                 return jsonify({"login": False})
         else:
@@ -316,6 +325,7 @@ def pay_loan():
     uid = request.args.get('uid')
     lid = request.args.get('lid')
     amount = request.args.get('amount')
+    payment_type = request.args.get('type')
     print(uid, lid, amount)
     cur = mysql.connection.cursor()
 
@@ -336,7 +346,7 @@ def pay_loan():
         '''
     query4 = '''
              UPDATE loan_info 
-             SET loan_status="closed"
+             SET loan_status="closed" ,paid_loan=total_loan , tenure_completed = loan_tenure, installment_due_date= 'null'
              where user_id = %s and loan_id = %s
 
             '''
@@ -350,7 +360,7 @@ def pay_loan():
     print('------------------------------------------------------')
     print(today, 'day', today.day, 'month', today.month, 'year', today.year)
     print(due_date, 'installment due date ', due_date.day, type(due_date))
-    if today.year <= due_date.year:
+    if today.year == due_date.year:
 
         if today.month < due_date.month:
             transaction_status = 'green'
@@ -365,7 +375,8 @@ def pay_loan():
 
         else:
             transaction_status = 'red'
-
+    elif today.year < due_date.year:
+        transaction_status = 'green'
     else:
         transaction_status = 'red'
 
@@ -388,7 +399,9 @@ def pay_loan():
 
     else:
         msg = 'amount of ' + str(amount) + ' Rs Paid'
-    cur.execute(query2, (new_paid_loan, new_due_date, uid, lid))
+    print(type)
+    if payment_type == 'installment':
+        cur.execute(query2, (new_paid_loan, new_due_date, uid, lid))
     # to update transaction information into transaction table
 
     cur.execute(query3, (str(uid), str(lid), str(amount), transaction_status))
@@ -402,15 +415,17 @@ def pay_loan():
 def get_user_loan_options(uid):
     try:
         cursor = mysql.connection.cursor()
-        cursor.execute('''SELECT loan_type from loan_info 
-                                   WHERE user_id = %s AND loan_status = 'active'; ''',
+        cursor.execute('''SELECT loan_type,loan_id,loan_status from loan_info 
+                                   WHERE user_id = %s ''',
                        str(uid))
         result = cursor.fetchall()
         if result:
             option_list = []
+            print('===========result Loan Options============')
+            print(result)
             for option in result:
                 option_list.append((option['loan_type']))
-            return jsonify({"status": "success", "loan_options": option_list})
+            return jsonify({"status": "success", "loan_options": result})
         else:
             return jsonify({"status": "fail", "loan_options": null})
     except Exception as e:
@@ -422,22 +437,22 @@ def get_user_loan_options(uid):
 @app.route('/getUserLoanDetails/', methods=['GET'])
 def get_user_loan_details():
     uid = request.args.get('id')
-    loan_type = request.args.get('loantype')
+    loan_id = request.args.get('loanId')
     cursor = mysql.connection.cursor()
-    print(loan_type)
+    print(loan_id)
     try:
         last_three_transaction = '''
               select tid,note,paid_amount ,date ,status
               from transaction_info,loan_info 
-              where loan_info.user_id=%s and loan_info.loan_type=%s and loan_info.loan_id=transaction_info.loan_id 
+              where loan_info.user_id=%s and loan_info.loan_id=%s and loan_info.loan_id=transaction_info.loan_id 
               order by tid desc limit 3
                     '''
 
         cursor.execute('''SELECT * FROM user_info AS user, loan_info AS loan WHERE user.user_id = %s AND 
-        loan.loan_type = %s AND user.user_id = loan.user_id AND loan.loan_status = 'active';''',
-                       (str(uid), loan_type))
+        loan.loan_id = %s AND user.user_id = loan.user_id ;''',
+                       (str(uid), loan_id))
         result = cursor.fetchone()
-        cursor.execute(last_three_transaction, (uid, loan_type))
+        cursor.execute(last_three_transaction, (uid, loan_id))
         result2 = cursor.fetchall()
         print(result)
         if result:

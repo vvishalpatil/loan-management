@@ -10,7 +10,7 @@ const UserLogin = () => {
   const [redirect, setRedirect] = useState(false);
 
   const verifyLogin = async () => {
-    const params = { user_name: userName, password: password };
+    const params = { user_name: userName, password: password ,type: "User"};
     try {
       const res = await axios.get("/authenticate", { params: params }); //API call for USer login Authentication.
       console.log("verifyLogin", res.data);
