@@ -1,10 +1,11 @@
 **Loan Management System**
 In this web app we have covered All loan Related Operations 
+**User Dashboard**
 ![User Dashboard](https://raw.githubusercontent.com/vvishalpatil/loan-management/main/public/2.PNG)
-
+**Admin Dashboard**
 ![Admin Dashboard](https://raw.githubusercontent.com/vvishalpatil/loan-management/main/public/9.PNG)
-
-Find Walkthrough Of the project below description;
+**
+Find Walkthrough Of the project below description;**
 Description:
 A loan management system where users can perform loan related operations, and an admin who can view and track all the information about all the loan the company has distributed to its registered users.
 There are two dashboards one for The Admin and other one for Users, the admin/user can access dashboard by logging in through registered credentials.
@@ -28,6 +29,94 @@ Environment:
 Flask, React Js, MySQL, Docker, Bootstrap 4, Git
 
 **Find the Walkthrough of the Application Below **
+**
+Registration and Login Page**
+
+![User Dashboard](https://raw.githubusercontent.com/vvishalpatil/loan-management/main/public/1.PNG)
+
+
+**
+User Dashboard To visualize and Read Information About all the applied loan**
+
+
+![User Dashboard](https://raw.githubusercontent.com/vvishalpatil/loan-management/main/public/2.PNG)
+
+
+
+**
+New Loan Application Form **
+
+![User Dashboard](https://raw.githubusercontent.com/vvishalpatil/loan-management/main/public/3.PNG)
+
+
+**
+After applying for new loan User can select the loan from dropdown to visualize details on dashboard**
+
+
+![User Dashboard](https://raw.githubusercontent.com/vvishalpatil/loan-management/main/public/7.PNG)
+
+**
+
+User has option to pay the loan by installment or by paying whole amount use can close the loan **
+
+![User Dashboard](https://raw.githubusercontent.com/vvishalpatil/loan-management/main/public/5.PNG)
+
+![User Dashboard](https://raw.githubusercontent.com/vvishalpatil/loan-management/main/public/6.PNG)
+
+
+
+**
+After payment on Dashboard User can check the Transaction history 
+**
+![User Dashboard](https://raw.githubusercontent.com/vvishalpatil/loan-management/main/public/7.PNG)
+
+**
+By clicking on Edit user can edit Profile
+**
+
+![User Dashboard](https://raw.githubusercontent.com/vvishalpatil/loan-management/main/public/8.PNG)
+
+**
+
+Admin Side Application Workflow :
+
+
+Admin Dashboard - to visualize the Recoved loan and all loan information **
+
+![User Dashboard](https://raw.githubusercontent.com/vvishalpatil/loan-management/main/public/9.PNG)
+
+
+
+**
+
+Admin has different filter options **
+
+![User Dashboard](https://raw.githubusercontent.com/vvishalpatil/loan-management/main/public/11.PNG)
+
+admin has can search by name, id , loan amount paid, remaining 
+
+**
+Admin can view the User Loan Details by clicking on View chart **
+
+![User Dashboard](https://raw.githubusercontent.com/vvishalpatil/loan-management/main/public/12.PNG)
+
+**
+Admin can see the monthly transaction status in barchart **
+
+![User Dashboard](https://raw.githubusercontent.com/vvishalpatil/loan-management/main/public/10.PNG)
+
+**
+
+Admin can see the amount recovered and remaining amount from the piechart and estimated time to recover the whole amount 
+**
+
+![User Dashboard](https://raw.githubusercontent.com/vvishalpatil/loan-management/main/public/9.PNG)
+
+
+
+
+
+
 
 
 
