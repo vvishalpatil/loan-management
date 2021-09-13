@@ -1,6 +1,10 @@
 **Loan Management System**
 In this web app we have covered All loan Related Operations 
+![User Dashboard](https://raw.githubusercontent.com/vvishalpatil/loan-management/main/public/2.PNG)
 
+![Admin Dashboard](https://raw.githubusercontent.com/vvishalpatil/loan-management/main/public/9.PNG)
+
+Find Walkthrough Of the project below description;
 Description:
 A loan management system where users can perform loan related operations, and an admin who can view and track all the information about all the loan the company has distributed to its registered users.
 There are two dashboards one for The Admin and other one for Users, the admin/user can access dashboard by logging in through registered credentials.
