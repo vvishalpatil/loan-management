@@ -1,3 +1,33 @@
+**Loan Management System**
+In this web app we have covered All loan Related Operations 
+
+Description:
+A loan management system where users can perform loan related operations, and an admin who can view and track all the information about all the loan the company has distributed to its registered users.
+There are two dashboards one for The Admin and other one for Users, the admin/user can access dashboard by logging in through registered credentials.
+on the user dashboard, user can visualize the details of all the closed and active loans, user can also view and edit his profile. 
+The user can also apply for new loan. When the user successfully applies for new loan, the installment amount for that loan will be calculated in the backend according to the loan amount and loan tenure.
+User has option to pay the monthly installment for the loan and close the loan by paying the remaining loan amount.
+All the payment transactions are done via fake payment gateway designed for this application, on successful payment user can view the transaction details on dashboard.
+On the admin dashboard, Admin can view the details of all the users and their respective loans in table format.
+Admin can also search and filter the user and loan details by selecting different filters available.
+Admin can also visualize the total loan distributed, total loan recovered, monthly transaction details and estimated recovery time via Charts.
+ Team Size:
+2
+Responsibilities:
+Contributed in designing and development of components for admin and user dashboard.
+Contributed in building the APIs for the application by using Flask framework.
+Contributed in designing the database.
+Implemented Fake payment gateway to process the transactions.
+Performed code cleaning.
+Packaged the web application in the docker container.
+Environment:
+Flask, React Js, MySQL, Docker, Bootstrap 4, Git
+
+**Find the Walkthrough of the Application Below **
+
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
