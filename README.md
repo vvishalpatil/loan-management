@@ -53,7 +53,7 @@ New Loan Application Form **
 After applying for new loan User can select the loan from dropdown to visualize details on dashboard**
 
 
-![User Dashboard](https://raw.githubusercontent.com/vvishalpatil/loan-management/main/public/7.PNG)
+![User Dashboard](https://raw.githubusercontent.com/vvishalpatil/loan-management/main/public/7.png)
 
 **
 
@@ -91,7 +91,7 @@ Admin Dashboard - to visualize the Recoved loan and all loan information **
 
 Admin has different filter options **
 
-![User Dashboard](https://raw.githubusercontent.com/vvishalpatil/loan-management/main/public/11.PNG)
+![User Dashboard](https://raw.githubusercontent.com/vvishalpatil/loan-management/main/public/11.png)
 
 admin has can search by name, id , loan amount paid, remaining 
 
